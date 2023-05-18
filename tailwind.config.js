@@ -26,6 +26,31 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
+    keyframes: {
+      zoomIn: {
+        "0%": {
+          opacity: 0,
+          // transform: "scale3d(.3,.3,.3)",
+          transform: "scale(.3)",
+        },
+        "50%": {
+          opacity: 1,
+        },
+      },
+      zoomOut: {
+        "0%": {
+          opacity: 1,
+        },
+        "50%": {
+          opacity: 0,
+          transform: "scale3d(.3,.3,.3)",
+        },
+      },
+    },
+    animation: {
+      zoomIn: "zoomIn 1s",
+      zoomOut: "zoomOut 1s",
+    },
   },
   plugins: [],
 };

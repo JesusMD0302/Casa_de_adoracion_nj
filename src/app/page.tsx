@@ -10,14 +10,11 @@ import GalerySection from "@/components/GalerySection";
 import Navbar from "@/components/Navbar";
 import Countdown from "react-countdown";
 import CountdownTimer from "@/components/CountdownTimer";
-import {
-  BsFacebook,
-  BsFillGearFill,
-  BsFillGeoAltFill,
-  BsFillGeoFill,
-  BsPinAngle,
-} from "react-icons/bs";
+import { BsFacebook, BsFillGeoAltFill } from "react-icons/bs";
 import Title from "@/components/Title";
+import PopUp from "@/components/PopUp";
+import useActive from "@/hooks/useActive";
+import PrayerForm from "@/components/PrayerForm";
 
 moment.locale("es");
 
@@ -26,12 +23,23 @@ export default function Home() {
     moment().add(10, "minutes").seconds(0)
   );
   const [formatedDate, setFormatedDay] = useState<string>("");
+  const [active, setActive] = useState(false);
+  const {
+    active: eventsActive,
+    handleTrue: handleTrueEvents,
+    handleFalse: handleFalseEvents,
+  } = useActive();
+  const {
+    active: prayerActive,
+    handleTrue: handleTruePrayer,
+    handleFalse: handleFalsePrayer,
+  } = useActive();
 
   useEffect(() => {
     setFormatedDay(
       day.format("dddd, D [de] MMMM [de] YYYY, h:mm a").toUpperCase()
     );
-  }, []);
+  }, [day]);
 
   return (
     <>
@@ -49,10 +57,23 @@ export default function Home() {
               <Countdown date={day.toDate()} renderer={CountdownTimer} />
             </div>
             <div className="w-full flex justify-between items-end">
-              <Button text={"Solicitar oración"} />
-              <button className="font-bold underline text-xs">
+              <Button text={"Solicitar oración"} onClick={handleTruePrayer} />
+              {prayerActive ? (
+                <PopUp handlePopUpFalse={handleFalsePrayer}>
+                  <PrayerForm />
+                </PopUp>
+              ) : null}
+              <button
+                className="font-bold underline text-xs"
+                onClick={handleTrueEvents}
+              >
                 Ver próximos eventos
               </button>
+              {eventsActive ? (
+                <PopUp handlePopUpFalse={handleFalseEvents}>
+                  <h4>Esto es una prueba para página principal</h4>
+                </PopUp>
+              ) : null}
             </div>
           </div>
           <Image

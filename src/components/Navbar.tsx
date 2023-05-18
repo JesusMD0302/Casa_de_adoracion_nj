@@ -36,7 +36,7 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="w-full fixed z-50 top-0 left-0 bg-black/50 backdrop-blur-sm text-white py-2">
+    <nav className="w-full fixed z-20 top-0 left-0 bg-black/50 backdrop-blur-sm text-white py-2">
       <div className="max-w-container flex justify-between items-center m-auto">
         <div className="bg-white w-60 h-[70px] absolute -left-10 -z-10 rounded-full"></div>
         <Link
