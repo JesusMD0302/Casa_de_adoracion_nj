@@ -1,14 +1,16 @@
 import Image from "next/image";
-import { BsWhatsapp } from "react-icons/bs";
+import { BsList, BsThreeDotsVertical, BsWhatsapp } from "react-icons/bs";
 import ContactCard from "./ContactCard";
 import Button from "./Button";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import useActive from "@/hooks/useActive";
 
 function Navbar() {
   const logoWidth: number = 70;
 
   const [scrollTop, setScrollTop] = useState(0);
+  const { active: showMenu, handleToggle: handleToggleMenu } = useActive();
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     // first prevent the default behavior
@@ -36,49 +38,98 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="w-full fixed z-20 top-0 left-0 bg-black/50 backdrop-blur-sm text-white py-2">
-      <div className="max-w-container flex justify-between items-center m-auto">
-        <div className="bg-white w-60 h-[70px] absolute -left-10 -z-10 rounded-full"></div>
+    <nav
+      className="w-full sticky sm:fixed z-20 top-0 left-0 bg-black/50 backdrop-blur-sm text-white px-4 py-1
+                  sm:py-2 sm:px-0"
+    >
+      <div className="max-w-container flex justify-between items-center m-auto md:px-3 lg:px-0">
+        <div
+          className="bg-white w-full h-full absolute left-0 -z-10 
+                  sm:rounded-e-full sm:w-60 sm:h-[70px]"
+        ></div>
         <Link
           href={"/"}
-          className="flex items-center gap-2 text-black text-xs font-sans font-bold text-left"
+          className="text-black text-xs font-sans font-bold text-left h-24 w-24 
+                    sm:flex sm:items-center sm:gap-2 sm:h-auto sm:w-auto"
         >
           <Image
             src={"/logo.png"}
             alt="logo Casa de adoración NJ"
             width={logoWidth}
             height={logoWidth}
+            className="w-full 
+                      sm:h-[70px] sm:w-[70px]"
           />
-          Casa de <br /> Adoración <br /> NJ
+          <p
+            className="hidden 
+                        sm:block"
+          >
+            Casa de <br /> Adoración <br /> NJ
+          </p>
         </Link>
-        <div className={`flex flex-col gap-1 group ${scrollTop > 0 && "isOneLine"}`}>
+        <div
+          className={`text-black flex flex-col gap-1 group ${
+            scrollTop > 0 && "isOneLine"
+          }
+          sm:text-white`}
+        >
+          <button
+            type="button"
+            className="border border-gray-300 rounded p-4 text-3xl
+                        sm:hidden"
+            onClick={handleToggleMenu}
+          >
+            <BsList />
+          </button>
           <div
-            className="overflow-hidden transition-all duration-75 ease-in-out flex justify-between group-[.isOneLine]:invisible group-[.isOneLine]:-mt-16"
+            className="hidden overflow-hidden transition-all duration-75 ease-in-out 
+                        sm:flex sm:justify-between 
+                        sm:group-[.isOneLine]:invisible sm:group-[.isOneLine]:-mt-16"
           >
             <ContactCard icon={<BsWhatsapp />} contactInfo={"9999999999"} />
             <Button text={"Contactar"} />
           </div>
-          <ul className="flex gap-2 pt-0 group-[.isOneLine]:pt-8">
-            <li>
-              <Link href={"/"}>¿Quienes somos?</Link>
+          <ul
+            className={`
+          transition-all duration-200 ease-linear 
+          w-full bg-gray-200 text-center
+          absolute -z-40 left-0 ${showMenu ? "top-full" : "-top-full"} 
+          flex flex-col
+          sm:relative sm:bg-transparent sm:flex-row sm:gap-3 sm:z-0
+          sm:pt-0 sm:group-[.isOneLine]:pt-8`}
+          >
+            <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
+              <Link className="block w-full h-full" href={"/about-us"}>
+                ¿Quienes somos?
+              </Link>
             </li>
-            <li>
-              <Link href={"/#events"} scroll={false} onClick={handleScroll}>
+            <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
+              <Link
+                className="block w-full h-full"
+                href={"/#events"}
+                scroll={false}
+                onClick={handleScroll}
+              >
                 Eventos
               </Link>
             </li>
-            <li>
-              <Link href={"/#galery"} scroll={false} onClick={handleScroll}>
+            <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
+              <Link
+                className="block w-full h-full"
+                href={"/#galery"}
+                scroll={false}
+                onClick={handleScroll}
+              >
                 Galería
               </Link>
             </li>
-            {/* <li>
-              <Link href={"/#transmitions"} scroll={false} onClick={handleScroll}>
-                Transmisiones
-              </Link>
-            </li> */}
-            <li>
-              <Link href={"/#contact"} scroll={false} onClick={handleScroll}>
+            <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
+              <Link
+                className="block w-full h-full"
+                href={"/#contact"}
+                scroll={false}
+                onClick={handleScroll}
+              >
                 Contacto
               </Link>
             </li>
