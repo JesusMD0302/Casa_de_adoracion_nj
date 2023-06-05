@@ -18,7 +18,16 @@ module.exports = {
         70: "70%",
       },
       colors: {
+        "logo-900": "#440918",
         logo: "#730f28",
+        "logo-800": "#87122F",
+        "logo-700": "#B4183F",
+        "logo-600": "#E21D4E",
+        "logo-500": "#E74B72",
+        "logo-400": "#ED7895",
+        "logo-300": "#F3A5B8",
+        "logo-200": "#F9D2DC",
+        "logo-100": "#FCE8ED",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -52,5 +61,5 @@ module.exports = {
       zoomOut: "zoomOut 1s",
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };
