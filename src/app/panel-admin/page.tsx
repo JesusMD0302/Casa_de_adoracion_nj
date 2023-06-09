@@ -20,11 +20,11 @@ export default async function PanelAdminPage() {
 
   return (
     <main className="p-4">
-      <AdminSection title="Evento cercano">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {status !== 200 ? (
-            <p className="text-xl text-center">No hay eventos cercanos</p>
-          ) : (
+      <AdminSection title="Proximo evento">
+        {status !== 200 ? (
+          <p className="text-xl text-center">No hay un evento proximo</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Suspense fallback={<div>Loading...</div>}>
               <AdminEventCard
                 title={nextEvent.title}
@@ -32,8 +32,8 @@ export default async function PanelAdminPage() {
                 description={nextEvent.description}
               />
             </Suspense>
-          )}
-        </div>
+          </div>
+        )}
       </AdminSection>
     </main>
   );

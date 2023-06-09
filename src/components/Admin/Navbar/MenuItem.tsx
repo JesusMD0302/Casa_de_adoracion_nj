@@ -3,7 +3,7 @@ import Link from "next/link";
 function MenuItem({
   title,
   icon,
-  href = "/panel",
+  href = "/",
   ...props
 }: {
   title: string;

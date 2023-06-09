@@ -68,7 +68,11 @@ function EventsSection() {
             <span className="loading loading-spinner loading-lg"></span>
           )}
 
-          {!isLoading && (
+          {!isLoading && status !== 200 && (
+            <p className="text-center text-xl p-20">No hay eventos cercanos</p>
+          )}
+
+          {!isLoading && status === 200 && (
             <>
               <DateInfo
                 date={formatDate({ date: nextEvent?.date ?? "" })}

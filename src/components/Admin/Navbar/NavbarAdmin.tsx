@@ -23,7 +23,7 @@ function NavbarAdmin({
       </div>
       <div className="drawer-side z-10">
         <label htmlFor={id} className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 lg:w-64 h-full bg-[#730C2A] text-white">
+        <ul className="menu p-4 w-80 lg:w-56 h-full bg-[#730C2A] text-white">
           <div className="w-full h-20 mb-2 bg-[#B0123E] rounded-md py-2">
             <Image
               src={"/logo-horizontal-blanco.png"}
@@ -39,9 +39,17 @@ function NavbarAdmin({
             title="Eventos"
             icon={<BsCalendarEventFill />}
           />
-          <MenuItem title="Imagenes" icon={<BsCardImage />} />
+          <MenuItem
+            href="/panel-admin/images"
+            title="Imagenes"
+            icon={<BsCardImage />}
+          />
           <div className="divider before:bg-[#56051c] after:bg-[#56051c] my-0"></div>
-          <MenuItem title="Usuarios" icon={<BsPersonFill />} />
+          <MenuItem
+            href="/panel-admin/users"
+            title="Usuarios"
+            icon={<BsPersonFill />}
+          />
         </ul>
       </div>
     </div>

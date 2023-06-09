@@ -1,5 +1,12 @@
-import { BsPersonCircle } from "react-icons/bs";
+import {
+  BsCalendarEventFill,
+  BsCardImage,
+  BsPersonCircle,
+  BsPersonFill,
+  BsPlus,
+} from "react-icons/bs";
 import { CgMenuLeft } from "react-icons/cg";
+import MenuCreate from "../MenuCreate/MenuCreate";
 
 function AdminHeader({
   drawerID,
@@ -10,8 +17,8 @@ function AdminHeader({
   className?: string;
 }) {
   return (
-    <header className={`px-4 py-3 shadow-md sticky top-0 w-full ${className}`}>
-      <ul className="grid grid-cols-[1fr_6fr_1fr] place-items-center">
+    <header className={`px-4 py-2 shadow-md sticky top-0 w-full ${className}`}>
+      <ul className="grid grid-cols-[1fr_6fr_2fr] md:grid-cols-[1fr_6fr_1fr] place-items-center">
         <li>
           <label
             htmlFor={drawerID}
@@ -20,9 +27,10 @@ function AdminHeader({
             <CgMenuLeft />
           </label>
         </li>
-        <li className="text-center text-xl font-semibold">Panel</li>
-        <li className="w-full text-3xl">
-          <BsPersonCircle className="w-full" />
+        <li></li>
+        <li className="w-full grid grid-cols-2 md:grid-cols-[3fr_1fr] gap-2 md:gap-0 place-items-center">
+          <MenuCreate />
+          <BsPersonCircle className="w-full text-3xl md:text-2xl" />
         </li>
       </ul>
     </header>
