@@ -12,8 +12,8 @@ import EventsContainer from "@/components/Landing/Event/EventsContainer";
 import Button from "@/components/Landing/Button/Button";
 import Section from "../Section/Section";
 import DateInfo from "../DateInfo/DateInfo";
-import { getData } from "../../../../utilities/fetching";
-import { formatDate } from "../../../../utilities/formatingDates";
+import { getData } from "../../../utils/fetching";
+import { formatDate } from "../../../utils/formatingDates";
 
 function EventsSection() {
   const {

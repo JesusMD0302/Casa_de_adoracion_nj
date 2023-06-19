@@ -1,6 +1,6 @@
 import { AdminEventCard } from "@/components/Admin/Event/AdminEventCard";
 import AdminSection from "@/components/Admin/Section/AdminSection";
-import { getData } from "../../../utilities/fetching";
+import { getData } from "../../utils/fetching";
 import { Suspense } from "react";
 
 export default async function PanelAdminPage() {

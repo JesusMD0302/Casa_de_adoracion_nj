@@ -7,6 +7,7 @@ import {
 } from "react-icons/bs";
 import "moment/locale/es";
 import moment from "moment";
+import ImageUploadField from "@/components/ImageUploadField/ImageUploadField";
 moment.locale("es");
 
 function MenuCreate() {
@@ -38,7 +39,39 @@ function MenuCreate() {
           </li>
         </ul>
       </details>
+      <NewEventModal />
+      <UploadImageModal />
+      <NewUserModal />
+    </>
+  );
+}
 
+export default MenuCreate;
+
+export function AdminModal({
+  modalId,
+  children,
+  ...props
+}: {
+  modalId: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <>
+      <input type="checkbox" id={modalId} className="modal-toggle" />
+      <div className="modal text-gray-700">
+        <div className="modal-box">{children}</div>
+        <label className="modal-backdrop" htmlFor={modalId}>
+          Close
+        </label>
+      </div>
+    </>
+  );
+}
+
+export function NewEventModal() {
+  return (
+    <>
       {/* New Event Modal */}
       <AdminModal modalId="event_modal">
         <h3 className="text-center text-gray-800 font-bold text-lg">
@@ -117,7 +150,13 @@ function MenuCreate() {
           </div>
         </form>
       </AdminModal>
+    </>
+  );
+}
 
+export function UploadImageModal() {
+  return (
+    <>
       {/* New Image Modal */}
       <AdminModal modalId="image_modal">
         <h3 className="text-center text-gray-800 font-bold text-lg">
@@ -138,78 +177,44 @@ function MenuCreate() {
               <option>Especiales</option>
             </select>
           </div>
-
-          <div className="form-control">
-            <label htmlFor="dropzone-file" className="label">
+          <div className="w-full flex flex-col">
+            <label htmlFor="galeries" className="label">
               <span className="label-text text-gray-700 font-bold">
-                Imagen(es)
+                Galerías
               </span>
             </label>
-            <div className="flex items-center justify-center w-full">
-              <label
-                htmlFor="dropzone-file"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg
-                    aria-hidden="true"
-                    className="w-10 h-10 mb-3 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                    ></path>
-                  </svg>
-                  <p className="mb-2 text-sm text-gray-500 text-center">
-                    <span className="font-semibold">
-                      Click para seleccionar
-                    </span>{" "}
-                    o arrastra y suelta la(s) imagen(es)
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    SVG, PNG, JPG or GIF (MAX. 800x400px)
-                  </p>
-                </div>
-                <input id="dropzone-file" type="file" className="hidden" />
+            <div className="grid min-h-16 grid-rows-[repeat(auto-fill,_minmax(4rem,_1fr))] md:grid-cols-2 lg:grid-cols-4 gap-2">
+              <label className="border rounded-md w-full h-full grid place-items-center">
+                <input type="radio" name="galery_id" />
+              </label>
+              <label className="border rounded-md w-full h-full grid place-items-center">
+                <input type="radio" name="galery_id" />
+              </label>
+              <label className="border rounded-md w-full h-full grid place-items-center">
+                <input type="radio" name="galery_id" />
+              </label>
+              <label className="border rounded-md w-full h-full grid place-items-center">
+                <input type="radio" name="galery_id" />
               </label>
             </div>
           </div>
-        </form>
-      </AdminModal>
 
-      {/* New User Modal */}
-      <AdminModal modalId="user_modal">
-        <h3>User modal</h3>
+          <div className="form-control">
+            <ImageUploadField />
+          </div>
+        </form>
       </AdminModal>
     </>
   );
 }
 
-export default MenuCreate;
-
-export function AdminModal({
-  modalId,
-  children,
-  ...props
-}: {
-  modalId: string;
-  children?: React.ReactNode;
-}) {
+export function NewUserModal() {
   return (
     <>
-      <input type="checkbox" id={modalId} className="modal-toggle" />
-      <div className="modal text-gray-700">
-        <div className="modal-box">{children}</div>
-        <label className="modal-backdrop" htmlFor={modalId}>
-          Close
-        </label>
-      </div>
+      {/* New User Modal */}
+      <AdminModal modalId="user_modal">
+        <h3>User modal</h3>f
+      </AdminModal>
     </>
   );
 }
