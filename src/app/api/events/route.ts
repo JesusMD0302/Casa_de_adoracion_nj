@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { eventSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
-import moment from "moment";
-import { NoDataError } from "@/utils/errors";
+import { NoDataError, UnauthorizedError } from "@/utils/errors";
+import { ValidateDate } from "@/utils/validateDate";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const events = await prisma.event.findMany({
       where: {
@@ -26,7 +27,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ data: { nextEvent, events } }, { status: 200 });
   } catch (error) {
-    
     if (error instanceof NoDataError) {
       return NextResponse.json(
         {
@@ -47,29 +47,48 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
-  const body: { title: string; description: string; ubication: string } =
-    await req.json();
-
+export async function POST(req: NextRequest) {
   try {
-    eventSchema.parse(body);
+    ValidateAuthorization(req);
+
+    const body = await req.json();
+
+    body.startDate = ValidateDate(body.startDate);
+    body.endDate = body.endDate && ValidateDate(body.endDate);
+
+    const { title, description, ubication, startDate, endDate } =
+      eventSchema.parse(body);
 
     const newEvent = await prisma.event.create({
       data: {
-        title: body.title,
-        description: body.description,
-        ubication: body.description,
-        startDate: moment().add(1, "days").format().toString(),
+        title,
+        description,
+        ubication,
+        startDate,
+        endDate,
       },
     });
 
     return NextResponse.json({ data: { event: newEvent } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
           data: {
-            errors: error.issues.map((issue) => ({ message: issue.message })),
+            errors: error.issues.map((issue) => ({
+              message: issue.message,
+            })),
           },
         },
         { status: 400 }

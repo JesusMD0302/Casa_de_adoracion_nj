@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["clientExtensions"]
+  // previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -44,4 +44,18 @@ model User {
   userName String
   email    String @unique
   password String
+}
+
+model Announcement {
+  announcementID  Int        @id @default(autoincrement())
+  title           String
+  announcementDate DateTime
+  activities      Activity[]
+}
+
+model Activity {
+  activitieID    Int          @id @default(autoincrement())
+  name           String
+  announcementID Int
+  announcement   Announcement @relation(fields: [announcementID], references: [announcementID])
 }

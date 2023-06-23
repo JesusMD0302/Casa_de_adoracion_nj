@@ -1,11 +1,11 @@
 import { writeFile } from "fs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import path from "path";
 import { NoDataError, ValidateFormDataError } from "@/utils/errors";
 import { ValidateFormData } from "@/lib/validator";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const images = await prisma.image.findMany();
 
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const data = await req.formData();
 

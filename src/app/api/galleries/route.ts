@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { gallerySchema } from "@/schemas/schemas";
 import { ZodError } from "zod";
 import { DataError, NoDataError } from "@/utils/errors";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const galleries = await prisma.gallery.findMany({
       include: { Images: true },
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body: { name: string } = await req.json();
 
   try {

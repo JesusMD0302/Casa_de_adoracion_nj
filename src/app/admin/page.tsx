@@ -1,4 +1,4 @@
-import AdminEventCard from "@/components/Admin/Event/AdminEventCard";
+import { AdminEventCard } from "@/components/Admin/Event/AdminEventCard";
 
 export default function AdminPage() {
   return (

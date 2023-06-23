@@ -1,4 +1,3 @@
-import { File } from "buffer";
 import { z } from "zod";
 
 export const eventSchema = z.object({
@@ -23,6 +22,23 @@ export const eventSchema = z.object({
     })
     .nonempty("Es necesario una ubicación")
     .min(5, "Ubicación invalida"),
+  startDate: z
+    .date({
+      invalid_type_error: "Fecha de inicio invalida",
+      required_error: "Es necesaria una fecha de inicio",
+    })
+    .min(new Date(), {
+      message: "La fecha de inicio no puede ser anterior al día de hoy",
+    }),
+  endDate: z
+    .date({
+      required_error: "La fecha de termino es invalida",
+      invalid_type_error: "La fecha de termino es invalida",
+    })
+    .min(new Date(), {
+      message: "La fecha de termino no puede ser anterior al día de hoy",
+    })
+    .optional(),
 });
 
 export const gallerySchema = z.object({
@@ -61,4 +77,33 @@ export const userSchema = z.object({
     .regex(/[A-Z]/, "La contraseña debe contener al menos una letra mayúscula")
     .regex(/[a-z]/, "La contraseña debe contener al menos una letra minúscula")
     .regex(/[0-9]/, "La contraseña debe contener al menos un número"),
+});
+
+export const announcementSchema = z.object({
+  title: z
+    .string({
+      invalid_type_error: "Titulo invalido",
+      required_error: "Es necesario un título",
+    })
+    .nonempty("Es necesario un título")
+    .min(5, "El titulo es muy corto"),
+  announcementDate: z
+    .date({
+      required_error: "La fecha es necesaria",
+      invalid_type_error: "La fecha del evento es invalida",
+    })
+    .min(new Date(), {
+      message: "La fecha no puede ser anterior al día de hoy",
+    }),
+  activities: z
+    .object({
+      name: z
+        .string({
+          invalid_type_error: "Nombre invalido",
+          required_error: "Es necesario un nombre para la actividad",
+        })
+        .nonempty("Es necesario un nombre para la actividad")
+        .min(5, "El nombre es muy corto"),
+    })
+    .array(),
 });

@@ -21,6 +21,7 @@ function EventsSection() {
     handleTrue: handleTrueEvents,
     handleFalse: handleFalseEvents,
   } = useActive();
+
   const {
     active: prayerActive,
     handleTrue: handleTruePrayer,
@@ -31,7 +32,7 @@ function EventsSection() {
   const [status, setStatus] = useState<number>();
   const [nextEvent, setNextEvent] = useState<{
     title: string;
-    date: string;
+    startDate: string;
     description: string;
   }>();
   const [events, setEvents] = useState<[]>([]);
@@ -75,11 +76,11 @@ function EventsSection() {
           {!isLoading && status === 200 && (
             <>
               <DateInfo
-                date={formatDate({ date: nextEvent?.date ?? "" })}
+                date={formatDate({ date: nextEvent?.startDate ?? "" })}
                 title={nextEvent?.title ?? ""}
               />
               <Countdown
-                date={moment(nextEvent?.date ?? "").toDate()}
+                date={moment(nextEvent?.startDate ?? "").toDate()}
                 renderer={CountdownTimer}
               />
             </>

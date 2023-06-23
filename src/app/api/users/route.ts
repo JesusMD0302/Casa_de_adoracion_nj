@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { userSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
 import { DataError, NoDataError } from "@/utils/errors";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const users = await prisma.user.findMany();
 
   try {
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body: { userName: string; email: string; password: string } =
     await req.json();
 
