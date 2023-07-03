@@ -35,8 +35,7 @@ function Modal({
           }`}
         >
           <button
-            className="block ml-auto text-3xl p-1 border rounded-full outline-none transition-all text-black hover:bg-gray-100 active:bg-gray-500 active:text-white
-            sm:text-base"
+            className="block ml-auto text-3xl p-1 border rounded-full outline-none transition-all text-black hover:bg-gray-100 active:bg-gray-500 active:text-white"
             onClick={modalHanddle}
           >
             <BsX />
@@ -55,8 +54,7 @@ function Modal({
         }`}
       >
         <button
-          className="block ml-auto text-3xl p-1 border rounded-full outline-none transition-all text-black hover:bg-gray-100 active:bg-gray-500 active:text-white
-          sm:text-base"
+          className="block ml-auto text-3xl p-1 border rounded-full outline-none transition-all text-black hover:bg-gray-100 active:bg-gray-500 active:text-white"
           onClick={modalHanddle}
         >
           <BsX />

@@ -13,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" data-theme="light">
-      <body className="scroll-smooth min-h-screen w-full">{children}</body>
+      <body className="scroll-smooth min-h-screen w-full">
+        {children}
+      </body>
     </html>
   );
 }

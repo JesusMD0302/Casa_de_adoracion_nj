@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { gallerySchema } from "@/schemas/schemas";
 import { ZodError } from "zod";
-import { DataError, NoDataError } from "@/utils/errors";
+import { DataError, NoDataError, UnauthorizedError } from "@/utils/errors";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,9 +41,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body: { name: string } = await req.json();
-
   try {
+    ValidateAuthorization(req);
+
+    const body: { name: string } = await req.json();
+
     gallerySchema.parse(body);
 
     const galleryFound = await prisma.gallery.count({
@@ -64,6 +67,17 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof ZodError) {
       return NextResponse.json(
         {

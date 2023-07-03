@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { DataError } from "@/utils/errors";
+import { DataError, UnauthorizedError } from "@/utils/errors";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 const prisma = new PrismaClient();
 
@@ -8,10 +9,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { galleryID: string } }
 ) {
-  const requestGalleryID = params.galleryID;
-  const galleryID = Number(requestGalleryID);
-
   try {
+    ValidateAuthorization(req);
+
+    const requestGalleryID = params.galleryID;
+    const galleryID = Number(requestGalleryID);
     if (isNaN(galleryID) || galleryID < 1) {
       throw new DataError("El id no existe");
     }
@@ -26,6 +28,17 @@ export async function GET(
 
     return NextResponse.json({ data: { galery: gallery } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof DataError) {
       return NextResponse.json(
         {
@@ -50,11 +63,13 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { galleryID: string } }
 ) {
-  const requestGalleryID = params.galleryID;
-
-  const galleryID = Number(requestGalleryID);
-
   try {
+    ValidateAuthorization(req);
+
+    const requestGalleryID = params.galleryID;
+
+    const galleryID = Number(requestGalleryID);
+
     if (isNaN(galleryID) || galleryID == 0) {
       throw new DataError("El id no existe");
     }
@@ -69,6 +84,17 @@ export async function PUT(
 
     return NextResponse.json({ data: { gallery: gallery } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof DataError) {
       return NextResponse.json(
         {
@@ -83,7 +109,7 @@ export async function PUT(
     }
 
     return NextResponse.json(
-      { data: { message: "could not update the information" } },
+      { data: { message: "Internal server error" } },
       { status: 500 }
     );
   }
@@ -93,11 +119,13 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { galleryID: string } }
 ) {
-  const requestGalleryID = params.galleryID;
-
-  const galleryID = Number(requestGalleryID);
-
   try {
+    ValidateAuthorization(req);
+
+    const requestGalleryID = params.galleryID;
+
+    const galleryID = Number(requestGalleryID);
+
     if (isNaN(galleryID) || galleryID == 0) {
       throw new DataError("El id no existe");
     }
@@ -110,6 +138,17 @@ export async function DELETE(
 
     return NextResponse.json({ elementDeleted: res }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof DataError) {
       return NextResponse.json(
         {
@@ -124,7 +163,7 @@ export async function DELETE(
     }
 
     return NextResponse.json(
-      { data: { message: "The id, doesn't exist" } },
+      { data: { message: "Internal server error" } },
       { status: 500 }
     );
   }

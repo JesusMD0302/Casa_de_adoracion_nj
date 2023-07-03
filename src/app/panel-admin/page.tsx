@@ -6,16 +6,18 @@ import { Suspense } from "react";
 export default async function PanelAdminPage() {
   const { data, status } = await getData({
     url: "http://localhost:3000/api/events",
+    isSSR: true,
   });
 
-  let nextEvent: { title: string; date: string; description: string } = {
+  let nextEvent: { title: string; startDate: string; description: string } = {
     title: "",
-    date: "",
+    startDate: "",
     description: "",
   };
 
   if (status === 200) {
     nextEvent = data.nextEvent;
+    console.log(nextEvent);
   }
 
   return (
@@ -28,7 +30,7 @@ export default async function PanelAdminPage() {
             <Suspense fallback={<div>Loading...</div>}>
               <AdminEventCard
                 title={nextEvent.title}
-                date={nextEvent.date}
+                date={nextEvent.startDate}
                 description={nextEvent.description}
               />
             </Suspense>

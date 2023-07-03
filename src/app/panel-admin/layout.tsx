@@ -1,3 +1,4 @@
+import Providers from "./Providers";
 import AdminHeader from "@/components/Admin/Header/AdminHeader";
 import NavbarAdmin from "@/components/Admin/Navbar/NavbarAdmin";
 
@@ -15,14 +16,16 @@ export default function AdminPanelLayout({
   const navDrawerId = "nav-drawer";
 
   return (
-    <NavbarAdmin id={navDrawerId}>
-      <div className="relative min-h-screen bg-gray-100">
-        <AdminHeader
-          drawerID={navDrawerId}
-          className="relative z-10 bg-[#B0123E] text-white"
-        />
-        {children}
-      </div>
-    </NavbarAdmin>
+    <Providers>
+      <NavbarAdmin id={navDrawerId}>
+        <div className="relative min-h-screen bg-gray-100">
+          <AdminHeader
+            drawerID={navDrawerId}
+            className="relative z-10 bg-[#B0123E] text-white"
+          />
+          {children}
+        </div>
+      </NavbarAdmin>
+    </Providers>
   );
 }

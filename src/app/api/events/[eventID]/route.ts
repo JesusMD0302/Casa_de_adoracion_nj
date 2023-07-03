@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { eventSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
-import { DataError } from "@/utils/errors";
+import { DataError, UnauthorizedError } from "@/utils/errors";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { eventID: string } }
 ) {
-  const requestEventID = params.eventID;
-
-  const eventID = Number(requestEventID);
-
   try {
+    ValidateAuthorization(req);
+
+    const requestEventID = params.eventID;
+
+    const eventID = Number(requestEventID);
     if (isNaN(eventID) || eventID < 1) {
       throw new DataError("El id no existe");
     }
@@ -27,6 +29,17 @@ export async function GET(
 
     return NextResponse.json({ data: { event } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof DataError) {
       return NextResponse.json(
         {
@@ -51,6 +64,8 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { eventID: string } }
 ) {
+  ValidateAuthorization(req);
+
   const requestEventID = params.eventID;
 
   const eventID = Number(requestEventID);
@@ -75,6 +90,17 @@ export async function PUT(
     });
     return NextResponse.json({ data: { event } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof ZodError) {
       return NextResponse.json(
         {
@@ -110,6 +136,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { eventID: string } }
 ) {
+  ValidateAuthorization(req);
+
   const requestEventID = params.eventID;
 
   const eventID = Number(requestEventID);
@@ -127,6 +155,17 @@ export async function DELETE(
 
     return NextResponse.json({ elementDeleted: res }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof DataError) {
       return NextResponse.json(
         {

@@ -14,7 +14,7 @@ function MenuItem({
     <li>
       <Link
         href={href}
-        className="px-3 py-2 flex gap-2 rounded items-center text-xl transition-all duration-200 hover:bg-[#B0123E] md:text-base outline-none"
+        className="px-3 py-2 flex gap-2 rounded items-center text-xl transition-all duration-200 hover:bg-[#B0123E] outline-none"
       >
         {icon}
         {title}

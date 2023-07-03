@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { userSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
-import { DataError, NoDataError } from "@/utils/errors";
+import { DataError, NoDataError, UnauthorizedError } from "@/utils/errors";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 export async function GET(req: NextRequest) {
-  const users = await prisma.user.findMany();
-
   try {
+    const users = await prisma.user.findMany();
     if (users.length === 0) {
       throw new NoDataError("No hay usuarios");
     }
@@ -28,17 +28,23 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { data: { message: "Internal server error" } },
+      {
+        data: {
+          message: "Internal server error",
+        },
+      },
       { status: 500 }
     );
   }
 }
 
 export async function POST(req: NextRequest) {
-  const body: { userName: string; email: string; password: string } =
-    await req.json();
-
   try {
+    ValidateAuthorization(req);
+
+    const body: { userName: string; email: string; password: string } =
+      await req.json();
+
     userSchema.parse(body);
 
     const userFound = await prisma.user.count({
@@ -59,7 +65,16 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data: { user: newUser } }, { status: 200 });
   } catch (error) {
-    var getClassOf = Function.prototype.call.bind(Object.prototype.toString);
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
@@ -88,11 +103,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         data: {
-          errors: [
-            {
-              message: "Internal server error",
-            },
-          ],
+          message: "Internal server error",
         },
       },
       { status: 500 }

@@ -50,11 +50,11 @@ function Navbar() {
       <div className="max-w-container flex justify-between items-center m-auto md:px-3 lg:px-0">
         <div
           className="bg-white w-full h-full absolute left-0 -z-10 
-                  sm:rounded-e-full sm:w-60 sm:h-[70px]"
+                  sm:rounded-e-full sm:w-72 sm:h-[85px]"
         ></div>
         <Link
           href={"/"}
-          className="text-black text-xs font-sans font-bold text-left h-24 w-24 
+          className="text-black font-sans font-bold text-left max-h-[85px] w-24 
                     sm:flex sm:items-center sm:gap-2 sm:h-auto sm:w-auto"
         >
           <Image
@@ -63,7 +63,7 @@ function Navbar() {
             width={logoWidth}
             height={logoWidth}
             className="w-full 
-                      sm:h-[70px] sm:w-[70px]"
+                      sm:h-[90px] sm:w-[90px] object-cover"
           />
           <p
             className="hidden 
@@ -89,19 +89,20 @@ function Navbar() {
           <div
             className="hidden overflow-hidden transition-all duration-75 ease-in-out 
                         sm:flex sm:justify-between 
-                        sm:group-[.isOneLine]:invisible sm:group-[.isOneLine]:-mt-16"
+                        sm:group-[.isOneLine]:invisible sm:group-[.isOneLine]:-mt-24
+                        md:text-lg"
           >
             <ContactCard icon={<BsWhatsapp />} contactInfo={"9999999999"} />
             <Button text={"Contactar"} />
           </div>
           <ul
             className={`
-          transition-all duration-200 ease-linear 
-          w-full bg-gray-200 text-center
-          absolute -z-40 left-0 ${showMenu ? "top-full" : "-top-full"} 
+          transition-all duration-200 ease-out 
+          w-full bg-gray-200 text-center md:text-lg
+          absolute -z-40 left-0 ${showMenu ? "top-full" : "-top-[110%]"} 
           flex flex-col
           sm:relative sm:bg-transparent sm:flex-row sm:gap-3 sm:z-0
-          sm:pt-0 sm:group-[.isOneLine]:pt-8`}
+          sm:pt-1 sm:group-[.isOneLine]:pt-10`}
           >
             <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
               <Link className="block w-full h-full" href={"/about-us"}>

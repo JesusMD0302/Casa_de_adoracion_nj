@@ -13,7 +13,7 @@ function EventsContainer({
       <h4 className="text-2xl font-bold text-center">Proximos Eventos</h4>
       {/* ---- */}
       {isLoading && (
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg mx-auto"></span>
       )}
 
       {events.length === 0 && (

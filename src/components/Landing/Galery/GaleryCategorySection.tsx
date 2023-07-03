@@ -29,7 +29,7 @@ function GaleryCategorySection({
         imgBgURL={urlImage}
       >
         <Title title={title} />
-        <p className="max-w-[75ch] text-center normal-case">{textContent}</p>
+        <p className="max-w-[75ch] text-center normal-case md:text-lg">{textContent}</p>
         <Button text={"Ver imagenes"} onClick={handleTrue} />
       </Section>
       {/*

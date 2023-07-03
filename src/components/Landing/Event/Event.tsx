@@ -18,11 +18,11 @@ function Event() {
         4<span>Mayo</span>
       </p>
       <div className="px-2 max-h-32 w-full overflow-hidden">
-        <p className="text-lg font-bold sm:text-base">Titulo de muestra</p>
-        <p className="text-base font-bold text-gray-500 sm:text-sm">
+        <p className="text-lg font-bold sm:text-base md:text-xl">Titulo de muestra</p>
+        <p className="text-base font-bold text-gray-500 sm:text-sm md:text-lg">
           Horario - Ubicación
         </p>
-        <p className={`w-full text-sm overflow-hidden text-ellipsis transition-all duration-200 ease-in-out ${ !showAllInfo ? "line-clamp-2 max-h-[3em]" : "max-h-[10em]"} sm:text-xs`}>
+        <p className={`w-full text-sm overflow-hidden text-ellipsis transition-all duration-200 ease-in-out ${ !showAllInfo ? "line-clamp-2 max-h-[3em]" : "max-h-[10em]"} sm:text-xs md:text-base`}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
           porro accusantium ex? Lorem, ipsum dolor sit amet consectetur
           adipisicing elit. Consequuntur earum laborum similique doloribus

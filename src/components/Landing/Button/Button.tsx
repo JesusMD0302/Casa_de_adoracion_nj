@@ -16,7 +16,7 @@ function Button({
   if (underline) {
     return (
       <button
-        className={`font-bold underline text-base md:text-xs ${className}`}
+        className={`font-bold underline text-base md:text-lg ${className}`}
         onClick={onClick}
       >
         {text}
@@ -26,7 +26,7 @@ function Button({
   }
   return (
     <button
-      className={`px-4 py-3 text-base md:px-2 md:py-1 rounded-sm border border-white transition-all ease-linear duration-200 md:text-sm hover:bg-white hover:text-logo active:scale-90 ${className}`}
+      className={`px-4 py-3 text-base md:px-2 md:py-1 rounded-sm border border-white transition-all ease-linear duration-200 md:text-lg hover:bg-white hover:text-logo active:scale-90 ${className}`}
       onClick={onClick}
     >
       {text}

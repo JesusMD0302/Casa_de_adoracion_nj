@@ -26,7 +26,7 @@ export function AdminEventCard({
       <div className="card-body">
         {/* header */}
         <div className="card-title justify-between">
-          <div className="btn md:btn-sm btn-circle">
+          <div className="btn btn-circle">
             <Image
               src={"/logo-condensed.png"}
               alt=""
@@ -37,7 +37,7 @@ export function AdminEventCard({
           </div>
           <h2 className="text-center">{title}</h2>
           <details className="dropdown dropdown-end">
-            <summary className="btn md:btn-sm text-xl btn-circle btn-ghost border">
+            <summary className="btn text-xl md:text-2xl btn-circle btn-ghost border">
               <BsThreeDotsVertical />
             </summary>
             <ul className="p-2 shadow menu dropdown-content bg-white text-gray-600 rounded-box">
@@ -58,13 +58,13 @@ export function AdminEventCard({
         </div>
         {/* content */}
         <div>
-          <p className="mt-2 text-lg md:text-xs font-bold">{formatedDate}</p>
-          <p className="mt-2 overflow-hidden line-clamp-6 md:line-clamp-4 text-ellipsis text-base md:text-xs">
+          <p className="mt-2 text-lg md:text-base font-bold">{formatedDate}</p>
+          <p className="mt-2 overflow-hidden line-clamp-6 md:line-clamp-4 text-ellipsis text-base md:text-base">
             {description}
           </p>
         </div>
         <div className="mt-2">
-          <p className="text-sm md:text-xs text-gray-400">Modificado hace 5s</p>
+          <p className="text-sm md:text-base text-gray-400">Modificado hace 5s</p>
         </div>
       </div>
     </div>

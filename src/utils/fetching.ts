@@ -1,13 +1,21 @@
 export async function getData({
   url,
   headers,
+  isSSR = false,
 }: {
   url: string;
   headers?: {};
+  isSSR?: boolean;
 }) {
-  const response = await fetch(url, {
-    cache: "no-store",
-  });
+  let response;
+
+  if (isSSR) {
+    response = await fetch(url, {
+      cache: "no-store",
+    });
+  } else {
+    response = await fetch(url);
+  }
 
   const data = await response.json();
 

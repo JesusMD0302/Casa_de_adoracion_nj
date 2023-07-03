@@ -40,7 +40,7 @@ function EventsSection() {
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, status } = await getData({
-        url: "http://localhost:3000/api/events",
+        url: "http://localhost:3000/api/events"
       });
 
       setStatus(status);

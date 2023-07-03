@@ -2,8 +2,13 @@ import { writeFile } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import path from "path";
-import { NoDataError, ValidateFormDataError } from "@/utils/errors";
+import {
+  NoDataError,
+  UnauthorizedError,
+  ValidateFormDataError,
+} from "@/utils/errors";
 import { ValidateFormData } from "@/lib/validator";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 export async function GET(req: NextRequest) {
   try {
@@ -37,6 +42,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    ValidateAuthorization(req);
+
     const data = await req.formData();
 
     const { file, galleryId } = ValidateFormData(data);
@@ -62,6 +69,17 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data: { image: newImage } }, { status: 200 });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof ValidateFormDataError) {
       return NextResponse.json(
         { data: { errors: error.issues } },

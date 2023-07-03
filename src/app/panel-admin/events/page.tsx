@@ -5,9 +5,12 @@ import { getData } from "../../../utils/fetching";
 export default async function AdminEventsPage() {
   const { data, status } = await getData({
     url: "http://localhost:3000/api/events",
+    isSSR: true,
   });
 
-  const { data: allEventsData, status: allEventsStatus } = await getData({url: "http://localhost:3000/api/events/all"})
+  const { data: allEventsData, status: allEventsStatus } = await getData({
+    url: "http://localhost:3000/api/events/all",
+  });
 
   return (
     <>
@@ -17,10 +20,10 @@ export default async function AdminEventsPage() {
           {status !== 200 ? (
             <p className="text-xl text-center">No hay un evento proximo</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <AdminEventCard
                 title={data.nextEvent.title}
-                date={data.nextEvent.date}
+                date={data.nextEvent.startDate}
                 description={data.nextEvent.description}
               />
             </div>
@@ -34,12 +37,12 @@ export default async function AdminEventsPage() {
           {status !== 200 || data.events.length === 0 ? (
             <p className="text-xl text-center">No hay eventos cercanos</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {data.events.map((event: any, index: any) => (
                 <AdminEventCard
                   key={index}
                   title={event.title}
-                  date={event.date}
+                  date={event.startDate}
                   description={event.description}
                 />
               ))}
@@ -54,12 +57,12 @@ export default async function AdminEventsPage() {
           {allEventsStatus !== 200 || allEventsData.events.length === 0 ? (
             <p className="text-xl text-center">No hay eventos registrados</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {allEventsData.events.map((event: any, index: any) => (
                 <AdminEventCard
                   key={index}
                   title={event.title}
-                  date={event.date}
+                  date={event.startDate}
                   description={event.description}
                 />
               ))}

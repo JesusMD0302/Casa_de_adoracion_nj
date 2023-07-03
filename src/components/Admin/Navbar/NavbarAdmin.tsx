@@ -23,14 +23,14 @@ function NavbarAdmin({
       </div>
       <div className="drawer-side z-10">
         <label htmlFor={id} className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 lg:w-56 h-full bg-[#730C2A] text-white">
-          <div className="w-full h-20 mb-2 bg-[#B0123E] rounded-md py-2">
+        <ul className="menu p-4 w-80 h-full bg-[#730C2A] text-white">
+          <div className="w-full h-20 lg:h-24 mb-2 bg-[#B0123E] rounded-md py-2">
             <Image
               src={"/logo-horizontal-blanco.png"}
               alt=""
               height={500}
               width={500}
-              className="h-full object-contain grayscale "
+              className="h-full object-contain grayscale"
             />
           </div>
           <MenuItem href="/panel-admin/" title="Home" icon={<BsHouseFill />} />
