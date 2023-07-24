@@ -28,7 +28,7 @@ function EventsSection() {
     handleFalse: handleFalsePrayer,
   } = useActive();
 
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<number>();
   const [nextEvent, setNextEvent] = useState<{
     title: string;
@@ -50,7 +50,7 @@ function EventsSection() {
         setEvents(data.events);
       }
 
-      setLoading(false);
+      setIsLoading(false);
     };
 
     fetchEvents();

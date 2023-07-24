@@ -2,6 +2,7 @@ import { writeFile } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import path from "path";
+import fs from "fs";
 import {
   NoDataError,
   UnauthorizedError,
@@ -9,6 +10,7 @@ import {
 } from "@/utils/errors";
 import { ValidateFormData } from "@/lib/validator";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
+import { PrismaPromise } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   try {
@@ -46,28 +48,44 @@ export async function POST(req: NextRequest) {
 
     const data = await req.formData();
 
-    const { file, galleryId } = ValidateFormData(data);
+    const { files, galleryId } = ValidateFormData(data);
 
-    const bytes = await file?.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let images: any[] = [];
 
-    const fileName = `${crypto.randomUUID()}-${file.name}`;
+    for await (const file of files) {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
 
-    const filePath = path.join(process.cwd(), "public/galleries", fileName);
+      const fileName = `${crypto.randomUUID()}-${file.name}`;
 
-    writeFile(filePath, buffer, (err) => {
-      if (err) throw err;
-      console.log(`The file ${fileName} has been saved!`);
-    });
+      const filePath = path.join(process.cwd(), "public/galleries", fileName);
 
-    const newImage = await prisma.image.create({
-      data: {
-        galery: { connect: { galleryID: galleryId } },
-        imageURL: fileName,
-      },
-    });
+      writeFile(filePath, buffer, (err) => {
+        if (err) throw err;
+        console.log(`The file ${fileName} has been saved!`);
+      });
 
-    return NextResponse.json({ data: { image: newImage } }, { status: 200 });
+      try {
+        const res = await prisma.image.create({
+          data: {
+            galery: {
+              connect: {
+                galleryID: galleryId,
+              },
+            },
+            imageURL: fileName,
+          },
+        });
+        images = [...images, res];
+      } catch (err) {
+        fs.unlink(filePath, (err) => {
+          if (err) throw err;
+          console.log(`The file ${fileName} has been deleted`);
+        });
+      }
+    }
+
+    return NextResponse.json({ data: { images: images } }, { status: 200 });
   } catch (error: any) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json(
@@ -86,6 +104,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    console.log(error);
 
     return NextResponse.json(
       { data: { message: "Internal server error" } },

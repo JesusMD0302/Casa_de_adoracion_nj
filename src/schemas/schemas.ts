@@ -95,15 +95,11 @@ export const announcementSchema = z.object({
     .min(new Date(), {
       message: "La fecha no puede ser anterior al día de hoy",
     }),
-  activities: z
-    .object({
-      name: z
-        .string({
-          invalid_type_error: "Nombre invalido",
-          required_error: "Es necesario un nombre para la actividad",
-        })
-        .nonempty("Es necesario un nombre para la actividad")
-        .min(5, "El nombre es muy corto"),
+  announcementDescription: z
+    .string({
+      invalid_type_error: "Aviso invalida",
+      required_error: "Es necesario un aviso",
     })
-    .array(),
+    .nonempty("Es necesario un aviso")
+    .min(5, "El aviso es muy corto"),
 });

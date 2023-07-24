@@ -18,10 +18,10 @@ function NavbarAdmin({
   return (
     <div className="drawer lg:drawer-open">
       <input id={id} type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content max-h-screen overflow-y-scroll">
+      <div className="drawer-content max-h-screen overflow-y-scroll md:z-40">
         {children}
       </div>
-      <div className="drawer-side z-10">
+      <div className="drawer-side z-10 md:z-0">
         <label htmlFor={id} className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 h-full bg-[#730C2A] text-white">
           <div className="w-full h-20 lg:h-24 mb-2 bg-[#B0123E] rounded-md py-2">

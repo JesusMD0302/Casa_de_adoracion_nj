@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { NoDataError } from "@/utils/errors";
 import { announcementSchema } from "@/schemas/schemas";
@@ -8,15 +7,7 @@ import { ValidateDate } from "@/utils/validateDate";
 
 export async function GET(req: NextRequest) {
   try {
-    const announcements = await prisma.announcement.findMany({
-      include: {
-        activities: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+    const announcements = await prisma.announcement.findMany();
 
     if (announcements.length === 0) throw new NoDataError("No hay avisos");
 
@@ -59,27 +50,14 @@ export async function POST(req: NextRequest) {
 
     body.announcementDate = ValidateDate(body.announcementDate);
 
-    const { title, announcementDate, activities } =
+    const { title, announcementDate, announcementDescription } =
       announcementSchema.parse(body);
 
-    let newAnnouncement: Prisma.AnnouncementCreateInput;
-
-    newAnnouncement = {
-      title,
-      announcementDate,
-      activities: {
-        create: activities,
-      },
-    };
-
     const createdAnnouncement = await prisma.announcement.create({
-      data: newAnnouncement,
-      include: {
-        activities: {
-          select: {
-            name: true,
-          },
-        },
+      data: {
+        title,
+        announcementDate,
+        announcementDescription,
       },
     });
 

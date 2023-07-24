@@ -12,11 +12,13 @@ function GaleryCategorySection({
   urlImage,
   title,
   textContent,
+  galleryURL,
   ...props
 }: {
   title: string;
   urlImage: string;
   textContent: string;
+  galleryURL: string;
 }) {
   const { active, handleFalse, handleTrue } = useActive();
 
@@ -39,7 +41,7 @@ function GaleryCategorySection({
       */}
       {active ? (
         <Modal expanded handleModalFalse={handleFalse}>
-          <GaleryContainer />
+          <GaleryContainer url={galleryURL} category={title} />
         </Modal>
       ) : null}
     </>

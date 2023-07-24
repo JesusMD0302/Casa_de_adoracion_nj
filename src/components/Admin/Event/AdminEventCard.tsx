@@ -12,14 +12,17 @@ export function AdminEventCard({
   title = "Titulo",
   date = null,
   description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Id adipisci voluptatem debitis aliquam repudiandae, ipsum deserunt explicaboquis quae dolore odio et error.",
+  updatedAt = null,
   ...props
 }: {
   title?: string;
   date?: string | null;
   description?: string;
+  updatedAt?: string | null;
 }) {
   const today = date == null ? moment() : moment(date);
   const formatedDate = today.format("DD/MMMM/YYYY - h:mm a").toUpperCase();
+  const updatedTime = moment(updatedAt).fromNow(true);
 
   return (
     <div className="card compact bg-neutral text-base-100 w-full">
@@ -64,7 +67,7 @@ export function AdminEventCard({
           </p>
         </div>
         <div className="mt-2">
-          <p className="text-sm md:text-base text-gray-400">Modificado hace 5s</p>
+          <p className="text-sm md:text-base text-gray-400">Modificado hace {updatedTime}</p>
         </div>
       </div>
     </div>

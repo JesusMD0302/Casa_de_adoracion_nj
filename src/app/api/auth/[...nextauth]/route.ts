@@ -1,61 +1,7 @@
+import { authOptions } from "@/lib/auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "ejemplo@ejemplo.com",
-        },
-        password: {
-          label: "password",
-          type: "password",
-        },
-      },
-      async authorize(credentials, req) {
-        const res = await fetch("http://localhost:3000/api/login", {
-          method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        // const headers = res.headers;
-        let user = await res.json();
-
-        // user.headers = headers.get("Set-Cookie");
-
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          user = user.data.user;
-          return user;
-        }
-
-        throw new Error(JSON.stringify(user.data.errors));
-      },
-    }),
-  ],
-  pages: {
-    signIn: "/auth/login"
-  },
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    jwt({ account, token, user, profile, session }) {
-      if (user) token.user = user;
-      // console.log(user);
-      return token;
-    },
-    session({ session, token }) {
-      // console.log({ session, token });
-      session.user = token.user as any;
-      return session;
-    },
-  },
-});
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

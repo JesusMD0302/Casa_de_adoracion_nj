@@ -1,0 +1,166 @@
+"use client";
+
+import ImageUploadField from "@/components/ImageUploadField/ImageUploadField";
+import { AdminModal } from "../MenuCreate/MenuCreate";
+import { GaleryOption } from "../GaleryOption/GaleryOption";
+import { useForm, Controller } from "react-hook-form";
+
+export function UploadImageModal() {
+  const {
+    control,
+    handleSubmit: handleSubmitUseForm,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  const onSubmit = handleSubmitUseForm((data) => {
+    console.log(data);
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    try {
+      e.preventDefault();
+      let formData = new FormData(e.currentTarget as HTMLFormElement);
+
+      if (!formData.get("gallery_id")) {
+        alert("No se selecciono una opción");
+        return;
+      }
+
+      if (
+        formData.getAll("images").length < 0 ||
+        (formData.getAll("images")[0] as File).name === ""
+      ) {
+        alert("No se selecciono ninguna imagen");
+        return;
+      }
+
+      fetch("http://localhost:3000/api/images", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => {
+          if (res.ok) {
+            location.reload();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
+
+  return (
+    <>
+      {/* New Image Modal */}
+      <AdminModal modalId="image_modal">
+        <h3 className="text-center text-gray-800 font-bold text-xl">
+          Subir una nueva imagen
+        </h3>
+        <form
+          id="form-images"
+          className="w-full mt-2 mx-auto flex flex-col gap-2"
+          onSubmit={onSubmit}
+        >
+          <div className="w-full flex flex-col">
+            <label htmlFor="galeries" className="label">
+              <span className="label-text text-gray-700 font-bold">
+                Galerías
+              </span>
+            </label>
+            <div className="grid min-h-16 md:grid-cols-2 lg:grid-cols-4 gap-2">
+              <Controller
+                name="gallery_id"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <GaleryOption
+                    imageURL="/ninios-banner.jpg"
+                    optionName="Niños"
+                    {...field}
+                    value={1}
+                  />
+                )}
+              />
+              <Controller
+                name="gallery_id"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <GaleryOption
+                    imageURL="/hombres-banner.jpg"
+                    optionName="Hombres"
+                    {...field}
+                    value={2}
+                  />
+                )}
+              />
+              <Controller
+                name="gallery_id"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <GaleryOption
+                    imageURL="/mujeres-banner.jpg"
+                    optionName="Mujeres"
+                    {...field}
+                    value={3}
+                  />
+                )}
+              />
+              <Controller
+                name="gallery_id"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <GaleryOption
+                    imageURL="/especiales-banner.jpg"
+                    optionName="Especiales"
+                    {...field}
+                    value={4}
+                  />
+                )}
+              />
+            </div>
+          </div>
+          {errors.gallery_id && (
+            <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
+              El campo es requerido
+            </span>
+          )}
+
+          <Controller
+            name="images"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <div className="form-control">
+                {/* React hook form doesn't work yet with react dropzon */}
+                <ImageUploadField
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.files)}
+                />
+              </div>
+            )}
+          />
+          {errors.images && (
+            <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
+              El necesario seleccionar almenos una imagen
+            </span>
+          )}
+
+          <div className="form-control">
+            <input
+              type="submit"
+              value="Submit"
+              className="btn bg-logo text-white hover:bg-logo-900"
+            />
+          </div>
+        </form>
+      </AdminModal>
+    </>
+  );
+}

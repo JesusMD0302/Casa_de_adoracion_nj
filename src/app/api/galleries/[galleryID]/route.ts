@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { DataError, UnauthorizedError } from "@/utils/errors";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
-
-const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
@@ -20,13 +18,16 @@ export async function GET(
 
     const gallery = await prisma.gallery.findUnique({
       where: { galleryID: galleryID },
+      include: {
+        Images: true
+      }
     });
 
     if (gallery == null) {
       throw new DataError("El id no existe");
     }
 
-    return NextResponse.json({ data: { galery: gallery } }, { status: 200 });
+    return NextResponse.json({ data: { gallery: gallery } }, { status: 200 });
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json(

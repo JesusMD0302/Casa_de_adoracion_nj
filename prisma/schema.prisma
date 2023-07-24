@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  // previewFeatures = ["clientExtensions"]
+  previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -47,15 +47,18 @@ model User {
 }
 
 model Announcement {
-  announcementID  Int        @id @default(autoincrement())
-  title           String
-  announcementDate DateTime
-  activities      Activity[]
+  announcementID          Int      @id @default(autoincrement())
+  title                   String
+  announcementDate        DateTime
+  announcementDescription String
+  isImportant             Boolean  @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 }
 
-model Activity {
-  activitieID    Int          @id @default(autoincrement())
-  name           String
-  announcementID Int
-  announcement   Announcement @relation(fields: [announcementID], references: [announcementID])
+model WeekPsalm {
+  PsalmID   Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

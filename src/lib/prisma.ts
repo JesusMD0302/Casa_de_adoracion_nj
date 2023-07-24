@@ -18,10 +18,7 @@ async function seed() {
     where: {
       userID: 1,
     },
-    update: {
-      password: "adminpassword123",
-      userName: "DefaultAdmin",
-    },
+    update: {},
     create: {
       email: "defaultadmin@casanj.com",
       password: "adminpassword123",
@@ -51,6 +48,14 @@ async function seed() {
     where: { galleryID: 4 },
     update: {},
     create: { name: "Especiales" },
+  });
+
+  const defaultPsalm = await prisma.weekPsalm.upsert({
+    where: { PsalmID: 1 },
+    update: {},
+    create: {
+      content: "<p>Salmo semanal</p>",
+    },
   });
 }
 
