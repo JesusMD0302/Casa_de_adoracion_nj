@@ -1,4 +1,3 @@
-import Footer from "@/components/Landing/Footer/Footer";
 import { Header } from "@/components/Landing/Header/Header";
 
 export default function AboutUsPage() {
@@ -29,7 +28,6 @@ export default function AboutUsPage() {
           Si eso te suena bien, entonces ¡Nos encantaría conocerte pronto!
         </p>
       </main>
-      <Footer />
     </>
   );
 }

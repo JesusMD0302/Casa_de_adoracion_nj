@@ -1,60 +1,73 @@
 "use client";
 
 import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AdminSection from "../Section/AdminSection";
 import ImageCard from "./ImageCard";
-import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { getData } from "@/utils/fetching";
 import useActive from "@/hooks/useActive";
+import { useEffect, useState } from "react";
+import { deleteImage } from "@/utils/api";
 
 export default function ImagesSection({
-  url,
+  categoryID,
   category,
+  isLoading,
+  status,
+  data,
   ...props
 }: {
-  url: string;
+  categoryID: string;
   category: string;
+  isLoading: boolean;
+  status: boolean | string;
+  data: any;
 }) {
   const { active, handleToggle } = useActive();
+  const [images, setImages] = useState([]);
 
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [status, setStatus] = useState<number>(0);
-  const [images, setImages] = useState<[]>([]);
+  const queryClient = useQueryClient();
+
+  const mutationForDelete = useMutation({
+    mutationFn: deleteImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["images"] });
+    },
+  });
+
+  const handleDelete = (imageID: number) => {
+    const res = confirm("¿Desea eliminar la imagen?");
+
+    if (res) {
+      mutationForDelete.mutate(imageID);
+    }
+  };
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const { data, status } = await getData({
-        url: url,
-      });
-
-      setStatus(status);
-
-      if (status === 200) {
-        setImages(data.gallery.Images);
-      }
-
-      setLoading(false);
-    };
-
-    fetchImages();
-  }, [url]);
+    if (!isLoading && status === "success") {
+      setImages(
+        data.images!.filter((image: any) => image.galleryID.toString() === categoryID)
+      );
+    }
+  }, [isLoading, categoryID, data, status]);
 
   return (
     <>
-      <AdminSection title={category}>
+      <AdminSection title={`Categoría - ${category}`}>
         {isLoading && (
-          <div className="flex flex-col items-center">
+          <div className="my-auto flex flex-col items-center">
             <span className="loading loading-spinner loading-lg"></span>
           </div>
         )}
 
-        {!isLoading && images.length === 0 && (
-          <p className="text-xl text-center">No hay imagenes en esta galería</p>
+        {!isLoading && images!.length <= 0 && (
+          <p className="my-auto text-xl text-center">
+            No hay imagenes en esta galería
+          </p>
         )}
 
         {/* Mapping images */}
-        {!isLoading && images.length > 0 && (
+        {!isLoading && images!.length > 0 && (
           <>
             <div
               className={`
@@ -62,7 +75,7 @@ export default function ImagesSection({
             >
               <div className="w-full min-h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {images.map((image: any, index: any) => (
-                  <ImageCard className="image-card" key={image.imageID}>
+                  <ImageCard className="image-card" handleDelete={handleDelete} elementID={image.imageID} key={image.imageID}>
                     <Image
                       alt={`imagen ${category}`}
                       src={`/galleries/${image.imageURL}`}

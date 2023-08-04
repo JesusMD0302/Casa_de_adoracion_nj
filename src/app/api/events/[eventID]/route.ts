@@ -4,6 +4,7 @@ import { eventSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
 import { DataError, UnauthorizedError } from "@/utils/errors";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
+import { ValidateDate } from "@/utils/validateDate";
 
 export async function GET(
   req: NextRequest,
@@ -75,10 +76,13 @@ export async function PUT(
       throw new DataError("El id no existe");
     }
 
-    const body: { title: string; description: string; ubication: string } =
-      await req.json();
+    const body = await req.json();
 
-    eventSchema.parse(body);
+    body.startDate = ValidateDate(body.startDate);
+    body.endDate = body.endDate && ValidateDate(body.endDate);
+
+    const { title, description, ubication, startDate, endDate } =
+      eventSchema.parse(body);
 
     const event = await prisma.event.update({
       where: { eventID: eventID },

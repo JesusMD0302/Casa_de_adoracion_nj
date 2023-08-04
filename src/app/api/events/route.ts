@@ -53,9 +53,6 @@ export async function POST(req: NextRequest) {
     
     const body = await req.json();
 
-    console.log(body, "hola mundo");
-    
-
     body.startDate = ValidateDate(body.startDate);
     body.endDate = body.endDate && ValidateDate(body.endDate);
 
@@ -97,8 +94,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    console.log(error);
     
     return NextResponse.json(
       {

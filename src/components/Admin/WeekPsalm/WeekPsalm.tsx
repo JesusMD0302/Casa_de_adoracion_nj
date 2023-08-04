@@ -1,108 +1,119 @@
 "use client";
 
-import TinyEditor from "@/components/TinyEditor/TinyEditor";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import TinyEditor from "@/components/Admin/TinyEditor/TinyEditor";
 import AdminSection from "../Section/AdminSection";
-import { useEffect, useState } from "react";
-import { getData } from "@/utils/fetching";
 import useActive from "@/hooks/useActive";
+import { getWeekPsalm, updateWeekPsalm } from "@/utils/api";
 
 export default function WeekPsalm() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [status, setStatus] = useState<number>();
-  const [weekPsalm, setWeekPsalm] = useState<string>("Salmo semanal");
   const { active, handleTrue } = useActive(false);
+  const {
+    active: showMessage,
+    handleTrue: handleShowMessageTrue,
+    handleFalse: handleShowMessageFalse,
+  } = useActive(false);
 
-  const handleChangeEditor = () => {
-    handleTrue();
+  const handleShowMessage = () => {
+    handleShowMessageTrue();
+
+    setTimeout(() => handleShowMessageFalse(), 1500);
   };
 
-  /* 
-    const handleChangeEditor = (editor: string, onChange: (editor: string) => void) => {
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useForm();
+
+  const { data, isLoading, status } = useQuery({
+    queryKey: ["weekPsalm"],
+    queryFn: getWeekPsalm,
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updateWeekPsalm,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["weekPsalm"] });
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    mutation.mutate(data);
+
+    handleShowMessage();
+  });
+
+  const handleChangeEditor = (
+    editor: string,
+    onChange: (editor: string) => void
+  ) => {
     handleTrue();
     onChange(editor);
   };
-  */
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-
-    const data: any = {};
-
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    fetch("http://localhost:3000/api/week-psalms/1", {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => {
-      if (res.ok) {
-        location.reload();
-      }
-    });
-  };
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data, status } = await getData({
-          url: "http://localhost:3000/api/week-psalms",
-        });
-
-        setStatus(status);
-
-        if (status === 200) {
-          setWeekPsalm(data.weekPsalm.content);
-        }
-      } catch (error) {
-        setStatus(500);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchEvents();
-  }, []);
+    if (!isLoading && status === "success") {
+      reset({
+        content: data.content,
+      });
+    }
+  }, [reset, data, isLoading, status]);
 
   return (
     <AdminSection title="Salmo semanal">
       {isLoading && (
-        <div className="flex flex-col items-center">
+        <div className="my-auto flex flex-col items-center">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       )}
 
-      {!isLoading && status !== 200 && (
-        <p className="text-xl text-center">No se encotro el salmo semanal</p>
+      {!isLoading && status === "error" && (
+        <p className="my-auto text-xl text-center">
+          No se encotro el salmo semanal
+        </p>
       )}
 
-      {!isLoading && status === 200 && (
-        <form className="flex flex-col gap-4 px-8" onSubmit={handleSubmit}>
+      {isSubmitted && showMessage && (
+        <div className="px-8 mb-2">
+          <p className="w-fulll px-3 py-2 rounded-md bg-blue-800 text-white font-bold">
+            Salmo actualizado
+          </p>
+        </div>
+      )}
+
+      {!isLoading && status === "success" && (
+        <form className="flex flex-col gap-4 px-8" onSubmit={onSubmit}>
           <div className="shadow-md shadow-slate-900/50 rounded-md">
-            <TinyEditor
-              initialValue={weekPsalm}
-              height={300}
-              textareaName="content"
-              onEditorChange={handleChangeEditor}
-            />
-            {/* <Controller
-              name="editor"
+            <Controller
+              name="content"
               control={control}
+              defaultValue="Contenido del aviso"
+              rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
-                <TinyEditor
-                  height={20}
-                  onEditorChange={(editor) => {
-                    handleChangeEditor(editor, onChange);
-                  }}
-                  value={value}
-                />
+                <>
+                  <div>
+                    <TinyEditor
+                      height={300}
+                      onEditorChange={(editor) => {
+                        handleChangeEditor(editor, onChange);
+                      }}
+                      value={value}
+                    />
+                  </div>
+                  {errors.editor && (
+                    <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
+                      El campo es requerido
+                    </span>
+                  )}
+                </>
               )}
-            /> */}
+            />
           </div>
           <div className="form-control">
             <input

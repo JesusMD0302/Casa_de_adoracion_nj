@@ -5,9 +5,10 @@ import Link from "next/link";
 import Button from "../Button/Button";
 import { Header } from "./Header";
 import { getData } from "@/utils/fetching";
+import TinyReader from "@/components/Admin/TinyReader/TinyReader";
 
 function MainHeader() {
-  const [psalm, setPsalm] = useState<string>();
+  const [psalm, setPsalm] = useState<string>("");
   const [status, setStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,7 +22,7 @@ function MainHeader() {
         setStatus(status);
 
         if (status === 200) {
-          setPsalm(data.weekPsalm.content);
+          setPsalm(data.weekPsalm.content as string);
         }
       } catch (error) {
         setStatus(500);
@@ -48,7 +49,7 @@ function MainHeader() {
           )}
 
           {!isLoading && status === 200 && (
-            <div dangerouslySetInnerHTML={{ __html: psalm as string }}></div>
+            <TinyReader content={psalm} />
           )}
 
           <Button>

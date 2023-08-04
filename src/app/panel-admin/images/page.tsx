@@ -1,19 +1,48 @@
-import ImageCard from "@/components/Admin/Images/ImageCard";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import ImagesSection from "@/components/Admin/Images/ImagesSection";
-import AdminSection from "@/components/Admin/Section/AdminSection";
-import Image from "next/image";
+import { getImages } from "@/utils/api";
 
 export default function AdminImagesPage() {
+  const { data, isLoading, status } = useQuery({
+    queryKey: ["images"],
+    queryFn: getImages,
+  });
+
   return (
     <main className="p-4">
+      <ImagesSection
+        categoryID="1"
+        category="Niños"
+        isLoading={isLoading}
+        status={status}
+        data={data}
+      />
       
-      <ImagesSection url="http://localhost:3000/api/galleries/1" category="Categoria - Niños" />
+      <ImagesSection
+        categoryID="2"
+        category="Hombres"
+        isLoading={isLoading}
+        status={status}
+        data={data}
+      />
 
-      <ImagesSection url="http://localhost:3000/api/galleries/2" category="Categoria - Hombres" />
+      <ImagesSection
+        categoryID="3"
+        category="Mujeres"
+        isLoading={isLoading}
+        status={status}
+        data={data}
+      />
 
-      <ImagesSection url="http://localhost:3000/api/galleries/3" category="Categoria - Mujeres" />
-      
-      <ImagesSection url="http://localhost:3000/api/galleries/4" category="Categoria - Especiales" />
+      <ImagesSection
+        categoryID="4"
+        category="Especiales"
+        isLoading={isLoading}
+        status={status}
+        data={data}
+      />
     </main>
   );
 }

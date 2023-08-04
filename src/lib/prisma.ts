@@ -1,3 +1,4 @@
+import { encryptPassword } from "@/utils/bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient().$extends({
@@ -14,14 +15,18 @@ const prisma = new PrismaClient().$extends({
 });
 
 async function seed() {
+  const encryptedPassword = await encryptPassword("adminPassword123");
+
   const defaultAdmin = await prisma.user.upsert({
     where: {
       userID: 1,
     },
-    update: {},
+    update: {
+      password: encryptedPassword,
+    },
     create: {
       email: "defaultadmin@casanj.com",
-      password: "adminpassword123",
+      password: encryptedPassword,
       userName: "DefaultAdmin",
     },
   });

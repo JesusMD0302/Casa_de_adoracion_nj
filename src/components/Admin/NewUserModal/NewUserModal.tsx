@@ -1,24 +1,61 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
 import Input from "../Input/Input";
-import { AdminModal } from "../MenuCreate/MenuCreate";
+import AdminModal from "../AdminModal/AdminModal";
+import useActive from "@/hooks/useActive";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postUser } from "@/utils/api";
+import { userSchema } from "@/schemas/schemas";
 
-export function NewUserModal() {
+export function NewUserModal({ modalId, formRecord }: AdminModalCreateProps) {
+  const {
+    active: showMessage,
+    handleTrue: handleShowMessageTrue,
+    handleFalse: handleShowMessageFalse,
+  } = useActive(false);
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    reset,
+    formState: { errors, isSubmitted },
+  } = useForm({
+    resolver: zodResolver(userSchema)
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: postUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+
+  const handleShowMessage = () => {
+    handleShowMessageTrue();
+
+    setTimeout(() => handleShowMessageFalse(), 1500);
+  };
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    mutation.mutate(data);
+
+    handleShowMessage();
+
+    reset({
+      userName: "",
+      email: "",
+      password: "",
+    });
   });
 
   return (
     <>
       {/* New User Modal */}
-      <AdminModal modalId="user_modal">
+      <AdminModal modalId={modalId}>
         <h3 className="text-center text-gray-800 font-bold text-lg">
           Crear un nuevo usuario
         </h3>
@@ -31,14 +68,14 @@ export function NewUserModal() {
             name="userName"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Nombre del usuario"
                 type="text"
                 placeholder="Nombre"
-                onChange={(e) => onChange(e)}
+                {...field}
                 errors={errors.userName}
-                errorMessage="El campo es requerido"
+                errorMessage={errors.userName?.message as string}
               />
             )}
           />
@@ -47,14 +84,14 @@ export function NewUserModal() {
             name="email"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Correo Electronico"
                 type="text"
                 placeholder="ejemplo@correo.com"
-                onChange={(e) => onChange(e)}
+                {...field}
                 errors={errors.email}
-                errorMessage="El campo es requerido"
+                errorMessage={errors.email?.message as string}
               />
             )}
           />
@@ -63,21 +100,28 @@ export function NewUserModal() {
             name="password"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Contraseña"
                 type="password"
                 placeholder="********"
-                onChange={(e) => onChange(e)}
+                {...field}
                 errors={errors.password}
-                errorMessage="El campo es requerido"
+                errorMessage={errors.password?.message as string}
               />
             )}
           />
+
+          {isSubmitted && showMessage && (
+            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
+              {formRecord ? "Datos actualizados" : "Usuario creado"}
+            </p>
+          )}
+
           <div className="form-control">
             <input
               type="submit"
-              value="Submit"
+              value="Enviar"
               className="btn bg-logo text-white hover:bg-logo-900 outline-none"
             />
           </div>

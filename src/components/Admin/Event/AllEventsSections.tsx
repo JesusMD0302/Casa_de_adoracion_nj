@@ -1,32 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import AdminSection from "../Section/AdminSection";
-import { getData } from "@/utils/fetching";
 import { AdminEventCard } from "./AdminEventCard";
+import { getAllEvents } from "@/utils/api";
+
+interface AllEvents {
+  events: AppEvent[];
+}
 
 export default function AllEventsSections() {
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [status, setStatus] = useState<number>();
-  const [events, setEvents] = useState<[]>([]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const { data, status } = await getData({
-        url: "http://localhost:3000/api/events/all",
-      });
-
-      setStatus(status);
-
-      if (status === 200) {
-        setEvents(data.events);
-      }
-
-      setLoading(false);
-    };
-
-    fetchEvents();
-  }, []);
+  const { data, isLoading, status} = useQuery<AllEvents>({
+    queryKey: ["allEvents"],
+    queryFn: getAllEvents,
+  });
 
   return (
     <AdminSection title="Todos los eventos">
@@ -37,17 +25,16 @@ export default function AllEventsSections() {
       )}
 
       {/* Mapping events */}
-      {!isLoading && (status !== 200 || events.length === 0) ? (
-        <p className="text-xl text-center">No hay eventos registrados</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {events.map((event: any, index: any) => (
+      {!isLoading && status === "error" && (
+        <p className="my-auto text-xl text-center">No hay eventos cercanos</p>
+      )}
+
+      {!isLoading && status === "success" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {data.events.map((event, index: any) => (
             <AdminEventCard
               key={index}
-              title={event.title}
-              date={event.startDate}
-              description={event.description}
-              updatedAt={event.updatedAt}
+              {...event}
             />
           ))}
         </div>

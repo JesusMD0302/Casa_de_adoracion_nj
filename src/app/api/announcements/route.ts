@@ -4,10 +4,20 @@ import { prisma } from "@/lib/prisma";
 import { NoDataError } from "@/utils/errors";
 import { announcementSchema } from "@/schemas/schemas";
 import { ValidateDate } from "@/utils/validateDate";
+import { ValidateAuthorization } from "@/utils/validateAuthorization";
 
 export async function GET(req: NextRequest) {
   try {
-    const announcements = await prisma.announcement.findMany();
+    const announcements = await prisma.announcement.findMany({
+      where: {
+        announcementDate: {
+          gt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+        },
+      },
+      orderBy: {
+        announcementDate: "asc",
+      },
+    });
 
     if (announcements.length === 0) throw new NoDataError("No hay avisos");
 
@@ -46,11 +56,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    ValidateAuthorization(req);
+
     const body = await req.json();
 
     body.announcementDate = ValidateDate(body.announcementDate);
 
-    const { title, announcementDate, announcementDescription } =
+    const { title, announcementDate, announcementDescription, isImportant } =
       announcementSchema.parse(body);
 
     const createdAnnouncement = await prisma.announcement.create({
@@ -58,6 +70,7 @@ export async function POST(req: NextRequest) {
         title,
         announcementDate,
         announcementDescription,
+        isImportant,
       },
     });
 

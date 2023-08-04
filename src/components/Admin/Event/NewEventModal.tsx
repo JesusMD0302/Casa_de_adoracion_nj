@@ -2,73 +2,96 @@
 
 import "moment/locale/es";
 import moment from "moment";
-import { AdminModal } from "../MenuCreate/MenuCreate";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import useActive from "@/hooks/useActive";
 import Input from "../Input/Input";
 import TextArea from "../TextArea/TextArea";
 import { useForm, Controller } from "react-hook-form";
-import { error } from "console";
+import AdminModal from "../AdminModal/AdminModal";
+import { postEvent, updateEvent } from "@/utils/api";
+import { useEffect } from "react";
 
 moment.locale("es");
 
-export function NewEventModal() {
-  const { active, handleToggle } = useActive();
+export function NewEventModal({ modalId, formRecord }: AdminModalCreateProps) {
+  const {
+    active: showMessage,
+    handleTrue: handleShowMessageTrue,
+    handleFalse: handleShowMessageFalse,
+  } = useActive(false);
+
+  const { active, handleToggle, handleTrue } = useActive();
   const {
     control,
-    handleSubmit: useFormHandleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitted },
+  } = useForm({ defaultValues: formRecord as any });
 
-  const onSubmit = useFormHandleSubmit((data) => {
-    console.warn(data);
+  useEffect(() => {
+    if (formRecord) {
+      reset({ ...formRecord });
+    }
+  }, [formRecord, reset]);
+
+  const queryClient = useQueryClient();
+
+  const mutationForCreate = useMutation({
+    mutationFn: postEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events", "allEvents"] });
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const mutationForUpdate = useMutation({
+    mutationFn: updateEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events", "allEvents"] });
+    },
+  });
 
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
+  const handleShowMessage = () => {
+    handleShowMessageTrue();
 
-    const startDate = formData.get("startDate");
-    const startDateHour = formData.get("startDateHour");
+    setTimeout(() => handleShowMessageFalse(), 1500);
+  };
 
-    formData.delete("startDate");
-    formData.delete("startDateHour");
+  const onSubmit = handleSubmit(async (data) => {
 
-    formData.set("startDate", `${startDate}T${startDateHour}`);
+    if (formRecord) {
+      mutationForUpdate.mutate({
+        eventID: (formRecord as any).eventID,
+        eventData: data,
+      });
 
-    if (formData.get("endDate") && formData.get("endDateHour")) {
-      const endDate = formData.get("endDate");
-      const endDateHour = formData.get("endDateHour");
+      if (mutationForUpdate.data?.event) {
+        reset({ ...mutationForUpdate.data!.event });
+      }
+    } else {
+      mutationForCreate.mutate(data);
 
-      formData.delete("endDate");
-      formData.delete("endDateHour");
-
-      formData.set("endDate", `${endDate}T${endDateHour}`);
+      reset({
+        title: "",
+        ubication: "",
+        description: "",
+        startDate: "",
+        endDate: "",
+      });
     }
 
-    const data: any = {};
+    handleShowMessage();
+  });
 
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    fetch("http://localhost:3000/api/events", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => {
-      if (res.ok) {
-        location.reload();
-      }
-    });
-  };
+  useEffect(() => {
+    if ((formRecord as any)?.endDate) {
+      handleTrue();
+    }
+  }, [formRecord, handleTrue]);
 
   return (
     <>
       {/* New Event Modal */}
-      <AdminModal modalId="event_modal">
+      <AdminModal modalId={modalId}>
         <h3 className="text-center text-gray-800 font-bold text-lg">
           Crear un nuevo evento
         </h3>
@@ -81,13 +104,13 @@ export function NewEventModal() {
             name="title"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Título del evento"
                 type="text"
                 placeholder="Título"
-                onChange={(e) => onChange(e)}
                 errors={errors.title}
+                {...field}
               />
             )}
           />
@@ -96,13 +119,13 @@ export function NewEventModal() {
             name="ubication"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Ubicación"
                 type="text"
                 placeholder="Ubicación"
-                onChange={(e) => onChange(e)}
                 errors={errors.ubication}
+                {...field}
               />
             )}
           />
@@ -110,34 +133,16 @@ export function NewEventModal() {
           <Controller
             name="startDate"
             control={control}
-            rules={{ required: true, min: moment().format("YYYY-MM-DD") }}
-            render={({ field: { onChange } }) => (
+            rules={{ required: true, min: moment().format("YYYY-MM-DDTHH:mm") }}
+            render={({ field }) => (
               <Input
                 label="Fecha del evento"
                 alterLabel="Fecha actual o posteriores"
-                type="date"
+                type="datetime-local"
                 placeholder="Fecha"
-                onChange={(e) => onChange(e)}
-                // min={moment().format("YYYY-MM-DD")}
+                min={moment().format("YYYY-MM-DDTHH:mm")}
                 errors={errors.startDate}
-              />
-            )}
-          />
-
-          {/* Start Date Hour */}
-          <Controller
-            name="startDateHour"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange } }) => (
-              <Input
-                label="Hora del evento"
-                alterLabel="Horas actual o posteriores"
-                type="time"
-                placeholder="Hora"
-                min={moment().format("HH:mm")}
-                onChange={(e) => onChange(e)}
-                errors={errors.startDateHour}
+                {...field}
               />
             )}
           />
@@ -149,6 +154,7 @@ export function NewEventModal() {
                 type="checkbox"
                 className="checkbox checkbox-sm"
                 onChange={handleToggle}
+                checked={active}
               />
               <span className="label-text">Agregar fecha de finalización</span>
             </label>
@@ -160,32 +166,16 @@ export function NewEventModal() {
               <Controller
                 name="endDate"
                 control={control}
-                rules={{ min: moment().format("YYYY-MM-DD") }}
-                render={({ field: { onChange } }) => (
+                rules={{ min: moment().format("YYYY-MM-DDTHH:mm") }}
+                render={({ field }) => (
                   <Input
                     label="Fecha de finalización del evento"
                     alterLabel="Fecha actual o posteriores"
-                    type="date"
+                    type="datetime-local"
                     placeholder="Fecha"
-                    min={moment().format("YYYY-MM-DD")}
-                    onChange={(e) => onChange(e)}
+                    min={moment().format("YYYY-MM-DDTHH:mm")}
                     errors={errors.endDate}
-                  />
-                )}
-              />
-              {/* End Date Hour */}
-              <Controller
-                name="endDateHour"
-                control={control}
-                rules={{ min: moment().format("HH:mm") }}
-                render={({ field: { onChange } }) => (
-                  <Input
-                    label="Hora de finalización del evento"
-                    type="time"
-                    placeholder="Hora"
-                    min={moment().format("HH:mm")}
-                    onChange={(e) => onChange(e)}
-                    errors={errors.endDateHour}
+                    {...field}
                   />
                 )}
               />
@@ -197,22 +187,28 @@ export function NewEventModal() {
             name="description"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <TextArea
                 label="Descripción del evento"
                 cols={30}
                 rows={4}
                 placeholder="Descripción"
-                onChange={(e) => onChange(e)}
                 errors={errors.description}
+                {...field}
               />
             )}
           />
 
+          {isSubmitted && showMessage && (
+            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
+              {formRecord ? "Datos actualizado" : "Evento creado"}
+            </p>
+          )}
+
           <div className="form-control">
             <input
               type="submit"
-              value="Submit"
+              value="Enviar"
               className="btn bg-logo text-white hover:bg-logo-900 outline-none"
             />
           </div>

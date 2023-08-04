@@ -77,7 +77,7 @@ export async function PUT(
 
     body.announcementDate = ValidateDate(body.announcementDate);
 
-    const { title, announcementDate, announcementDescription } =
+    const { title, announcementDate, announcementDescription, isImportant } =
       announcementSchema.parse(body);
 
     const announcement = await prisma.announcement.update({
@@ -86,6 +86,7 @@ export async function PUT(
         title,
         announcementDate,
         announcementDescription,
+        isImportant
       },
     });
 

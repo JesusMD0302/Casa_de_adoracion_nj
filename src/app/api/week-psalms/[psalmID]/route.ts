@@ -52,6 +52,8 @@ export async function PUT(
       );
     }
 
+    console.log(error);
+
     return NextResponse.json(
       { data: { message: "Internal server error" } },
       { status: 500 }

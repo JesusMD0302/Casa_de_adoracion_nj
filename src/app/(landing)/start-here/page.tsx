@@ -1,4 +1,3 @@
-import Footer from "@/components/Landing/Footer/Footer";
 import { Header } from "@/components/Landing/Header/Header";
 
 export default function StartHere() {
@@ -60,7 +59,6 @@ export default function StartHere() {
           </p>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

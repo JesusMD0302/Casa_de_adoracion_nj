@@ -1,60 +1,40 @@
 "use client";
 
-import { getData } from "@/utils/fetching";
+import { useQuery } from "@tanstack/react-query";
 import AdminSection from "../Section/AdminSection";
 import { AdminEventCard } from "./AdminEventCard";
-import { useEffect, useState } from "react";
+import { getEvents } from "@/utils/api";
 
-type Event = {
-  title: string;
-  startDate: string;
-  description: string;
-  updatedAt: string;
-};
+interface events {
+  events: AppEvent[];
+  nextEvent: AppEvent;
+}
 
 export default function NearEventsSection() {
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [status, setStatus] = useState<number>();
-  const [nextEvent, setNextEvent] = useState<Event>();
-  const [events, setEvents] = useState<Event[]>([]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const { data, status } = await getData({
-        url: "http://localhost:3000/api/events",
-      });
-
-      setStatus(status);
-
-      if (status === 200) {
-        setNextEvent(data.nextEvent);
-        setEvents(data.events);
-      }
-
-      setLoading(false);
-    };
-
-    fetchEvents();
-  }, []);
+  const { data, isLoading, status } = useQuery<events>({
+    queryKey: ["events"],
+    queryFn: getEvents,
+  });
 
   return (
     <>
       {/* Mapping the next event */}
       <AdminSection title="Proximo evento">
-        {isLoading ? (
-          <div className="flex flex-col items-center">
+        {isLoading && (
+          <div className="my-auto flex flex-col items-center">
             <span className="loading loading-spinner loading-lg"></span>
           </div>
-        ) : status !== 200 || nextEvent === undefined ? (
-          <p className="text-xl text-center">No hay un evento proximo</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <AdminEventCard
-              title={nextEvent!.title}
-              date={nextEvent!.startDate}
-              description={nextEvent!.description}
-              updatedAt={nextEvent!.updatedAt}
-            />
+        )}
+
+        {!isLoading && status === "error" && (
+          <p className="my-auto text-xl text-center">
+            No hay un evento proximo
+          </p>
+        )}
+
+        {!isLoading && status === "success" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <AdminEventCard {...data.nextEvent} />
           </div>
         )}
       </AdminSection>
@@ -63,23 +43,18 @@ export default function NearEventsSection() {
 
       <AdminSection title="Eventos cercanos">
         {isLoading && (
-          <div className="flex flex-col items-center">
+          <div className="my-auto flex flex-col items-center">
             <span className="loading loading-spinner loading-lg"></span>
           </div>
         )}
         {/* Mapping events */}
-        {!isLoading && (status !== 200 || events.length === 0) ? (
-          <p className="text-xl text-center">No hay eventos cercanos</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {events.map((event: any, index: any) => (
-              <AdminEventCard
-                key={index}
-                title={event.title}
-                date={event.startDate}
-                description={event.description}
-                updatedAt={event.updatedAt}
-              />
+        {!isLoading && status === "error" && (
+          <p className="my-auto text-xl text-center">No hay eventos cercanos</p>
+        )}
+        {!isLoading && status === "success" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            {data!.events.map((event, index: number) => (
+              <AdminEventCard key={index} {...event} />
             ))}
           </div>
         )}

@@ -1,29 +1,95 @@
 "use client";
 
-import TinyEditor from "@/components/TinyEditor/TinyEditor";
-import { AdminModal } from "../MenuCreate/MenuCreate";
 import moment from "moment";
-import Input from "../Input/Input";
 import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import TinyEditor from "@/components/Admin/TinyEditor/TinyEditor";
+import Input from "../Input/Input";
+import AdminModal from "../AdminModal/AdminModal";
+import { announcementSchema } from "@/schemas/schemas";
+import useActive from "@/hooks/useActive";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postAnnouncement, updateAnnouncement } from "@/utils/api";
+import { useEffect } from "react";
 
 moment.locale("es");
 
-export function NewAnnouncementModal() {
+export function NewAnnouncementModal({
+  modalId,
+  formRecord,
+}: AdminModalCreateProps) {
+  const {
+    active: showMessage,
+    handleTrue: handleShowMessageTrue,
+    handleFalse: handleShowMessageFalse,
+  } = useActive(false);
+
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    reset,
+    formState: { errors, isSubmitted },
+  } = useForm({
+    resolver: zodResolver(announcementSchema),
+    defaultValues: formRecord as any,
+  });
+
+  useEffect(() => {
+    if (formRecord) {
+      reset({ ...formRecord });
+    }
+  }, [formRecord, reset]);
+
+  const queryClient = useQueryClient();
+
+  const mutationForCreate = useMutation({
+    mutationFn: postAnnouncement,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+    },
+  });
+
+  const mutationForUpdate = useMutation({
+    mutationFn: updateAnnouncement,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+    },
+  });
+
+  const handleShowMessage = () => {
+    handleShowMessageTrue();
+
+    setTimeout(() => handleShowMessageFalse(), 1500);
+  };
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    if (formRecord) {
+      mutationForUpdate.mutate({
+        announcementID: (formRecord as any).announcementID,
+        announcementData: data,
+      });
+
+      if (mutationForUpdate.data?.announcement) {
+        reset({ ...mutationForUpdate.data.announcement });
+      }
+    } else {
+      mutationForCreate.mutate(data);
+      reset({
+        title: "",
+        announcementDate: "",
+        announcementDescription: "",
+        isImportan: false,
+      });
+    }
+
+    handleShowMessage();
   });
 
   return (
     <>
       {/* New Announcement Modal */}
-      <AdminModal modalId="announcement_modal">
+      <AdminModal modalId={modalId}>
         <h3 className="text-center text-gray-800 font-bold text-lg">
           Crear nuevo aviso
         </h3>
@@ -36,30 +102,31 @@ export function NewAnnouncementModal() {
             name="title"
             control={control}
             rules={{ required: true }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Titulo"
                 type="text"
                 placeholder="Titulo"
-                onChange={(e) => onChange(e)}
+                {...field}
                 errors={errors.title}
-                errorMessage="El campo es requerido"
+                errorMessage={errors.title?.message as string}
               />
             )}
           />
           {/* Announcement Date */}
           <Controller
-            name="date"
+            name="announcementDate"
             control={control}
             rules={{ required: true, min: moment().format("YYYY-MM-DD") }}
-            render={({ field: { onChange } }) => (
+            render={({ field }) => (
               <Input
                 label="Fecha"
                 alterLabel="Fecha actual o posteriores"
                 type="date"
                 min={moment().format("YYYY-MM-DD")}
-                onChange={(e) => onChange(e)}
-                errors={errors.date}
+                {...field}
+                errors={errors.announcementDate}
+                errorMessage={errors.announcementDate?.message as string}
               />
             )}
           />
@@ -75,6 +142,11 @@ export function NewAnnouncementModal() {
               <span className="label-text">Aviso importante</span>
             </label>
           </div>
+          {errors.isImportant && (
+            <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
+              {errors.isImportant?.message as string}
+            </span>
+          )}
 
           {/* Announcement Description */}
           <div className="form-control">
@@ -82,7 +154,7 @@ export function NewAnnouncementModal() {
               <span className="label-text text-gray-700 font-bold">Aviso</span>
             </label>
             <Controller
-              name="editor"
+              name="announcementDescription"
               control={control}
               defaultValue="Contenido del aviso"
               rules={{ required: true }}
@@ -97,19 +169,26 @@ export function NewAnnouncementModal() {
                       value={value}
                     />
                   </div>
-                  {errors.editor && (
+                  {errors.announcementDescription && (
                     <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
-                      El campo es requerido
+                      {errors.announcementDescription?.message as string}
                     </span>
                   )}
                 </>
               )}
             />
           </div>
+
+          {isSubmitted && showMessage && (
+            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
+              {formRecord ? "Datos actualizados" : "Aviso creado"}
+            </p>
+          )}
+
           <div className="form-control">
             <input
               type="submit"
-              value="Submit"
+              value="Enviar"
               className="btn bg-logo text-white hover:bg-logo-900 outline-none"
             />
           </div>

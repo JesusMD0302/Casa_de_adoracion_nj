@@ -1,19 +1,64 @@
 "use client";
 
-import ImageUploadField from "@/components/ImageUploadField/ImageUploadField";
-import { AdminModal } from "../MenuCreate/MenuCreate";
-import { GaleryOption } from "../GaleryOption/GaleryOption";
 import { useForm, Controller } from "react-hook-form";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import ImageUploadField from "@/components/Admin/ImageUploadField/ImageUploadField";
+import { GaleryOption } from "../GaleryOption/GaleryOption";
+import AdminModal from "../AdminModal/AdminModal";
+import { postImage } from "@/utils/api";
+import useActive from "@/hooks/useActive";
 
-export function UploadImageModal() {
+export function UploadImageModal({
+  modalId,
+  formRecord,
+}: AdminModalCreateProps) {
+  const {
+    active: showMessage,
+    handleTrue: handleShowMessageTrue,
+    handleFalse: handleShowMessageFalse,
+  } = useActive(false);
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: postImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["images"] });
+    },
+  });
+
   const {
     control,
+    setValue,
+    reset,
     handleSubmit: handleSubmitUseForm,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitted },
   } = useForm();
 
+  const handleShowMessage = () => {
+    handleShowMessageTrue();
+
+    setTimeout(() => handleShowMessageFalse(), 1500);
+  };
+
   const onSubmit = handleSubmitUseForm((data) => {
-    console.log(data);
+    const formData = new FormData();
+
+    formData.append("gallery_id", data.gallery_id);
+    
+    (data.images as any[]).forEach((image) => {
+      formData.append("images", image)
+    }) ;
+
+
+    mutation.mutate(formData);
+
+    handleShowMessage();
+
+    reset({
+      gallery_id: "",
+      images: "",
+    });
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,7 +101,7 @@ export function UploadImageModal() {
   return (
     <>
       {/* New Image Modal */}
-      <AdminModal modalId="image_modal">
+      <AdminModal modalId={modalId}>
         <h3 className="text-center text-gray-800 font-bold text-xl">
           Subir una nueva imagen
         </h3>
@@ -136,13 +181,10 @@ export function UploadImageModal() {
             name="images"
             control={control}
             rules={{ required: true }}
-            render={({ field }) => (
+            render={({ field: { name, ...field } }) => (
               <div className="form-control">
                 {/* React hook form doesn't work yet with react dropzon */}
-                <ImageUploadField
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.target.files)}
-                />
+                <ImageUploadField setValue={setValue} name={name} />
               </div>
             )}
           />
@@ -152,10 +194,16 @@ export function UploadImageModal() {
             </span>
           )}
 
+          {isSubmitted && showMessage && (
+            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
+              {formRecord ? "Datos actualizado" : "Evento creado"}
+            </p>
+          )}
+
           <div className="form-control">
             <input
               type="submit"
-              value="Submit"
+              value="Enviar"
               className="btn bg-logo text-white hover:bg-logo-900"
             />
           </div>

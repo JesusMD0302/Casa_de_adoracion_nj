@@ -4,16 +4,41 @@ import { userSchema } from "@/schemas/schemas";
 import { prisma } from "@/lib/prisma";
 import { DataError, NoDataError, UnauthorizedError } from "@/utils/errors";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
+import { encryptPassword } from "@/utils/bcrypt";
 
 export async function GET(req: NextRequest) {
   try {
-    const users = await prisma.user.findMany();
+    ValidateAuthorization(req);
+
+    const users = await prisma.user.findMany({
+      select: {
+        email: true,
+        userID: true,
+        userName: true,
+      },
+      where: {
+        userID: {
+          gt: 1,
+        },
+      },
+    });
     if (users.length === 0) {
       throw new NoDataError("No hay usuarios");
     }
 
     return NextResponse.json({ data: { users } }, { status: 200 });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          data: {
+            errors: error.message,
+          },
+        },
+        { status: 401 }
+      );
+    }
+
     if (error instanceof NoDataError) {
       return NextResponse.json(
         {
@@ -55,11 +80,13 @@ export async function POST(req: NextRequest) {
 
     if (userFound > 0) throw new DataError("Usuario ya registrado");
 
+    const encryptedPassword = await encryptPassword(body.password)
+
     const newUser = await prisma.user.create({
       data: {
         userName: body.userName,
         email: body.email,
-        password: body.password,
+        password: encryptedPassword,
       },
     });
 

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { BsList, BsThreeDotsVertical, BsWhatsapp } from "react-icons/bs";
-import ContactCard from "../../ContactCard";
+import ContactCard from "../ContactCard/ContactCard";
 import Button from "../Button/Button";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -93,7 +93,7 @@ function Navbar() {
                         md:text-lg"
           >
             <ContactCard icon={<BsWhatsapp />} contactInfo={"9999999999"} />
-            <Button text={"Contactar"} />
+            {/* <Button text={"Contactar"} /> */}
           </div>
           <ul
             className={`
@@ -106,7 +106,7 @@ function Navbar() {
           >
             <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
               <Link className="block w-full h-full" href={"/about-us"}>
-                ¿Quienes somos?
+                ¿Quiénes somos?
               </Link>
             </li>
             <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">

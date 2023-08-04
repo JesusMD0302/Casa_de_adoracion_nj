@@ -1,12 +1,6 @@
-import {
-  BsCalendarEventFill,
-  BsCardImage,
-  BsPersonCircle,
-  BsPersonFill,
-  BsPlus,
-} from "react-icons/bs";
 import { CgMenuLeft } from "react-icons/cg";
 import MenuCreate from "../MenuCreate/MenuCreate";
+import { UserMenu } from "../UserMenu/UserMenu";
 
 function AdminHeader({
   drawerID,
@@ -30,7 +24,7 @@ function AdminHeader({
         <li></li>
         <li className="w-full grid grid-cols-2 md:grid-cols-[3fr_1fr] gap-2 md:gap-0 place-items-center">
           <MenuCreate />
-          <BsPersonCircle className="w-full text-3xl md:text-2xl" />
+          <UserMenu />
         </li>
       </ul>
     </header>

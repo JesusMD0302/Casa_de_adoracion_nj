@@ -55,8 +55,6 @@ export default function TextArea({
       {errors && (
         <span className="w-full px-3 py-2 bg-red-300 text-red-950 rounded-md">
           {errorMessage}
-          <br />
-          {JSON.stringify(errors)}
         </span>
       )}
     </>

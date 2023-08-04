@@ -7,13 +7,13 @@ import { useState, useEffect } from "react";
 import CountdownTimer from "@/components/Landing/Timer/CountdownTimer";
 import Modal from "@/components/Landing/Modal/Modal";
 import useActive from "@/hooks/useActive";
-import PrayerForm from "@/components/PrayerForm";
+import PrayerForm from "@/components/Landing/PrayerForm/PrayerForm";
 import EventsContainer from "@/components/Landing/Event/EventsContainer";
 import Button from "@/components/Landing/Button/Button";
 import Section from "../Section/Section";
 import DateInfo from "../DateInfo/DateInfo";
-import { getData } from "../../../utils/fetching";
-import { formatDate } from "../../../utils/formatingDates";
+import { getData } from "@/utils/fetching";
+import { formatDate } from "@/utils/formatingDates";
 
 function EventsSection() {
   const {
@@ -34,13 +34,14 @@ function EventsSection() {
     title: string;
     startDate: string;
     description: string;
+    ubication: string;
   }>();
   const [events, setEvents] = useState<[]>([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, status } = await getData({
-        url: "http://localhost:3000/api/events"
+        url: "http://localhost:3000/api/events",
       });
 
       setStatus(status);
@@ -78,6 +79,7 @@ function EventsSection() {
               <DateInfo
                 date={formatDate({ date: nextEvent?.startDate ?? "" })}
                 title={nextEvent?.title ?? ""}
+                ubication={nextEvent!.ubication}
               />
               <Countdown
                 date={moment(nextEvent?.startDate ?? "").toDate()}

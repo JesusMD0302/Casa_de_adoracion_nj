@@ -8,8 +8,6 @@ export async function GET(
   { params }: { params: { galleryID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
-
     const requestGalleryID = params.galleryID;
     const galleryID = Number(requestGalleryID);
     if (isNaN(galleryID) || galleryID < 1) {
@@ -19,8 +17,8 @@ export async function GET(
     const gallery = await prisma.gallery.findUnique({
       where: { galleryID: galleryID },
       include: {
-        Images: true
-      }
+        Images: true,
+      },
     });
 
     if (gallery == null) {

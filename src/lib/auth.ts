@@ -26,8 +26,6 @@ export const authOptions: NextAuthOptions = {
         // const headers = res.headers;
         let user = await res.json();
 
-        // user.headers = headers.get("Set-Cookie");
-
         // If no error and we have user data, return it
         if (res.ok && user) {
           user = user.data.user;
@@ -47,11 +45,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt({ account, token, user, profile, session }) {
       if (user) token.user = user;
-      // console.log(user);
       return token;
     },
     session({ session, token }) {
-      // console.log({ session, token });
       session.user = token.user as any;
       return session;
     },

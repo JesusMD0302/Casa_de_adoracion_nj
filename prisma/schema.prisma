@@ -30,6 +30,8 @@ model Gallery {
   updatedAt DateTime @updatedAt
 }
 
+
+
 model Image {
   imageID   Int      @id @default(autoincrement())
   imageURL  String
@@ -45,6 +47,8 @@ model User {
   email    String @unique
   password String
 }
+
+
 
 model Announcement {
   announcementID          Int      @id @default(autoincrement())

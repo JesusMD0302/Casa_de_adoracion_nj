@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Title from "../Title/Title";
-import ImagesSection from "@/components/Admin/Images/ImagesSection";
-import useActive from "@/hooks/useActive";
 import { getData } from "@/utils/fetching";
-import ImageCard from "@/components/Admin/Images/ImageCard";
+import ImageCard from "./ImageCard";
 
 function GaleryContainer({
   url,
@@ -43,13 +41,13 @@ function GaleryContainer({
         <Title title={category} />
       </div>
       {isLoading && (
-        <div className="mt-3 flex flex-col items-center">
+        <div className="my-auto flex flex-col items-center">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       )}
 
       {!isLoading && images.length === 0 && (
-        <p className="mt-3 text-xl text-center">No hay imagenes en esta galería</p>
+        <p className="my-auto text-xl text-center">No hay imagenes en esta galería</p>
       )}
 
       {!isLoading && images.length > 0 && (

@@ -1,28 +1,47 @@
 "use client";
 
-import Image from "next/image";
 import React, { useCallback, InputHTMLAttributes } from "react";
-import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+import Dropzone, { useDropzone, FileWithPath } from "react-dropzone";
 import { HiOutlineCloudUpload } from "react-icons/hi";
+import { FieldValues, UseFormSetValue } from "react-hook-form";
 
-function ImageUploadField({ ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  const onDrop = useCallback((acceptedFiles: any[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
+interface ImageUploadFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+  name: string;
+  setValue: UseFormSetValue<FieldValues>;
+}
 
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        console.log(binaryStr);
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  }, []);
+function ImageUploadField({ setValue, name, value }: ImageUploadFieldProps) {
+  const onDrop = useCallback(
+    (acceptedFiles: FileWithPath[]) => {
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader();
+
+        reader.onabort = () => console.log("file reading was aborted");
+        reader.onerror = () => console.log("file reading has failed");
+        reader.onload = () => {
+          // Do whatever you want with the file contents
+          const binaryStr = reader.result;
+          console.log(binaryStr);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+
+      setValue(name, acceptedFiles);
+    },
+    [setValue, name]
+  );
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({ onDrop });
+    useDropzone({
+      onDrop,
+      accept: {
+        "image/*": [".jpeg", ".png"],
+      },
+      onFileDialogCancel: () => {
+        setValue(name, undefined);
+      },
+    });
 
   return (
     <>
@@ -39,7 +58,8 @@ function ImageUploadField({ ...props }: InputHTMLAttributes<HTMLInputElement>) {
                   key={index}
                   src={URL.createObjectURL(value)}
                   alt={value.name}
-                  fill
+                  width={300}
+                  height={200}
                   className="object-cover"
                 />
               </div>
@@ -47,8 +67,9 @@ function ImageUploadField({ ...props }: InputHTMLAttributes<HTMLInputElement>) {
           </div>
         </div>
       )}
+
       <div {...getRootProps()}>
-        <input {...getInputProps({ onChange: props.onChange })} />
+        <input {...getInputProps({ value: value })} />
         <div className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <HiOutlineCloudUpload className="w-10 h-10 text-gray-400" />

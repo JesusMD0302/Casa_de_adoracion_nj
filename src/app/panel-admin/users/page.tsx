@@ -1,7 +1,9 @@
+import UsersSection from "@/components/Admin/UsersSection/UsersSection";
+
 export default function AdminUsersPage() {
   return (
-    <main>
-      <h2>Users page</h2>
+    <main className="w-full">
+      <UsersSection />
     </main>
   );
 }
