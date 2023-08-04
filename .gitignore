@@ -35,6 +35,5 @@ yarn-error.log*
 next-env.d.ts
 
 # production api images
-/public/galleries/*.jpg
-/public/galleries/*.jpeg
-/public/galleries/*.png
+galleries/*
+!galleries/.gitkeep
