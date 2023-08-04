@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Providers from "./Providers";
 import AdminHeader from "@/components/Admin/Header/AdminHeader";
 import Drawer from "@/components/Admin/Drawer/Drawer";
@@ -9,7 +8,6 @@ export const metadata = {
     "Armonia Unidad Restauraccion que las familias sean felices y disfruten de las promesas del señor",
 };
 
-const queryClient = new QueryClient();
 
 export default function AdminPanelLayout({
   children,
@@ -20,7 +18,6 @@ export default function AdminPanelLayout({
 
   return (
     <Providers>
-      <QueryClientProvider client={queryClient}>
         <Drawer id={drawerId}>
           <div className="relative min-h-screen bg-gray-100">
             <AdminHeader
@@ -30,7 +27,6 @@ export default function AdminPanelLayout({
             {children}
           </div>
         </Drawer>
-      </QueryClientProvider>
     </Providers>
   );
 }
