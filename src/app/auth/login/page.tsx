@@ -27,7 +27,7 @@ export default function LoginPage() {
     if (res?.error) {
       let message = "";
 
-      console.log(res.error);
+      console.log(data, res);
       const errorParse = JSON.parse(res!.error);
 
       errorParse.forEach((newError: any) => {
