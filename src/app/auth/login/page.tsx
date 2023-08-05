@@ -23,11 +23,11 @@ export default function LoginPage() {
       ...data,
       redirect: false,
     });
+    console.log(data, res);
 
     if (res?.error) {
       let message = "";
 
-      console.log(data, res);
       const errorParse = JSON.parse(res!.error);
 
       errorParse.forEach((newError: any) => {
