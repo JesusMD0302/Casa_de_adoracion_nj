@@ -48,8 +48,6 @@ model User {
   password String
 }
 
-
-
 model Announcement {
   announcementID          Int      @id @default(autoincrement())
   title                   String
