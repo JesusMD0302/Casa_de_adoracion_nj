@@ -73,9 +73,9 @@ export const postUser = async (userData: any) => {
 };
 
 export const deleteUser = async (userID: number) => {
-  const {data} = await axios.delete(`/users/${userID}`);
-  return data.data
-}
+  const { data } = await axios.delete(`/users/${userID}`);
+  return data.data;
+};
 
 export const changePassword = async ({
   userID,

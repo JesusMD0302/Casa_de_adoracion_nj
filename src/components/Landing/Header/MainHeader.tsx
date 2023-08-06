@@ -16,7 +16,7 @@ function MainHeader() {
     const fetchWeelPsalm = async () => {
       try {
         const { data, status } = await getData({
-          url: "http://localhost:3000/api/week-psalms",
+          url: `${process.env.NEXTAUTH_URL}/api/week-psalms`,
         });
 
         setStatus(status);

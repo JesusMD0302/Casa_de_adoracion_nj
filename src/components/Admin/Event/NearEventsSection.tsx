@@ -11,7 +11,7 @@ interface events {
 }
 
 export default function NearEventsSection() {
-  const { data, isLoading, status } = useQuery<events>({
+  const { data, isLoading, status, error } = useQuery<events>({
     queryKey: ["events"],
     queryFn: getEvents,
   });

@@ -28,7 +28,7 @@ function Footer() {
       subject: "Contacto",
     };
 
-    const res = await fetch("http://localhost:3000/api/contact", {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/contact`, {
       method: "POST",
       body: JSON.stringify(data),
     });

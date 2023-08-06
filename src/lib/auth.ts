@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import axios from "./axios";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET ?? "",
@@ -18,30 +19,35 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/login`, {
-          method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
-        });
+        // console.log(process.env.NEXTAUTH_URL);
 
-        // const headers = res.headers;
-        let user = await res.json();
+        try {
+          const credentialDetails = {
+            email: credentials?.email,
+            password: credentials?.password,
+          };
 
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          user = user.data.user;
-          return user;
+          const res = await axios.post("/login", credentialDetails);
+
+          // If no error and we have user data, return it
+          if (res.status === 200) {
+            const user = res.data.data.user;
+            return user;
+          }
+
+          throw new Error(JSON.stringify(res.data.data.errors));
+        } catch (error) {
+          console.log(credentials, error);
         }
-
-        throw new Error(JSON.stringify(user.data.errors));
       },
     }),
   ],
-  // pages: {
-  //   signIn: "/auth/login",
-  // },
+
   session: {
     strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth/login",
   },
   callbacks: {
     jwt({ account, token, user, profile, session }) {

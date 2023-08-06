@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    URL: process.env.NEXTAUTH_URL,
+  },
   async headers() {
     return [
       {
