@@ -1,8 +1,6 @@
-import { writeFile } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import path from "path";
-import fs from "fs";
+import multer from "multer";
 import {
   NoDataError,
   UnauthorizedError,
@@ -10,8 +8,9 @@ import {
 } from "@/utils/errors";
 import { ValidateFormData } from "@/lib/validator";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
-import { PrismaPromise } from "@prisma/client";
 import { cloudinary } from "@/lib/cloudinary";
+
+const upload = multer({ dest: "temp/" });
 
 export async function GET(req: NextRequest) {
   try {
@@ -51,45 +50,28 @@ export async function POST(req: NextRequest) {
 
     const { files, galleryId } = ValidateFormData(data);
 
-    let images: any[] = [];
+    upload.array("images")(
+      req as any,
+      NextResponse as any,
+      async function (err) {
+        if (err) {
+          return NextResponse.json(
+            { error: "Error al subir los archivos" },
+            { status: 500 }
+          );
+        }
 
-    for await (const file of files) {
-      // const bytes = await file.arrayBuffer();
-      // const buffer = Buffer.from(bytes);
+        const files = (req as any).images;
+        const urls = [];
 
-      // const fileName = `${crypto.randomUUID()}-${file.name}`;
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          urls.push(result.secure_url);
+        }
 
-      // const filePath = path.join(process.cwd(), "public/galleries", fileName);
-
-      // writeFile(filePath, buffer, (err) => {
-      //   if (err) throw err;
-      //   console.log(`The file ${fileName} has been saved!`);
-      // });
-
-      const result = await new Promise((resolve, reject) => {
-        // const stream = cloudinary.uploader.upload_stream(resolve);
-        const stream = cloudinary.uploader.upload_stream(resolve);
-        stream.end(file);
-      });
-
-      try {
-        const res = await prisma.image.create({
-          data: {
-            galery: {
-              connect: {
-                galleryID: galleryId,
-              },
-            },
-            imageURL: (result as any).secure_url,
-          },
-        });
-        images = [...images, res];
-      } catch (err) {
-        console.log(err);
+        return NextResponse.json({ urls }, { status: 200 });
       }
-    }
-
-    return NextResponse.json({ data: { images: images } }, { status: 200 });
+    );
   } catch (error: any) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json(
