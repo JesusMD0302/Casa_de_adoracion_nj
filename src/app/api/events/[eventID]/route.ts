@@ -87,9 +87,11 @@ export async function PUT(
     const event = await prisma.event.update({
       where: { eventID: eventID },
       data: {
-        title: body.title,
-        description: body.description,
-        ubication: body.ubication,
+        title,
+        description,
+        ubication,
+        startDate,
+        endDate,
       },
     });
     return NextResponse.json({ data: { event } }, { status: 200 });

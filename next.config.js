@@ -8,6 +8,7 @@ const nextConfig = {
         port: "",
       },
     ],
+    domains: ['res.cloudinary.com']
   },
   env: {
     URL: process.env.NEXTAUTH_URL,

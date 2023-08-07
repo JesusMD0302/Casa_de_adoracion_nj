@@ -11,6 +11,7 @@ import {
 import { ValidateFormData } from "@/lib/validator";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
 import { PrismaPromise } from "@prisma/client";
+import { cloudinary } from "@/lib/cloudinary";
 
 export async function GET(req: NextRequest) {
   try {
@@ -53,16 +54,21 @@ export async function POST(req: NextRequest) {
     let images: any[] = [];
 
     for await (const file of files) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+      // const bytes = await file.arrayBuffer();
+      // const buffer = Buffer.from(bytes);
 
-      const fileName = `${crypto.randomUUID()}-${file.name}`;
+      // const fileName = `${crypto.randomUUID()}-${file.name}`;
 
-      const filePath = path.join(process.cwd(), "public/galleries", fileName);
+      // const filePath = path.join(process.cwd(), "public/galleries", fileName);
 
-      writeFile(filePath, buffer, (err) => {
-        if (err) throw err;
-        console.log(`The file ${fileName} has been saved!`);
+      // writeFile(filePath, buffer, (err) => {
+      //   if (err) throw err;
+      //   console.log(`The file ${fileName} has been saved!`);
+      // });
+
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(resolve);
+        stream.end(file);
       });
 
       try {
@@ -73,15 +79,12 @@ export async function POST(req: NextRequest) {
                 galleryID: galleryId,
               },
             },
-            imageURL: fileName,
+            imageURL: (result as any).secure_url,
           },
         });
         images = [...images, res];
       } catch (err) {
-        fs.unlink(filePath, (err) => {
-          if (err) throw err;
-          console.log(`The file ${fileName} has been deleted`);
-        });
+        console.log(err);
       }
     }
 
