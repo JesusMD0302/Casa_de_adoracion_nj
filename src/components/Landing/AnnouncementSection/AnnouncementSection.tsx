@@ -41,14 +41,14 @@ export default function AnnouncementSection() {
       <div className="flex flex-col items-center gap-5 py-5">
         <Title title="Avisos" color="white" />
         {isLoading && (
-          <div className="h-[15rem] w-full flex justify-center items-center">
+          <div className="h-[10rem] w-full flex justify-center items-center">
             <span className="my-auto loading loading-spinner loading-lg"></span>
           </div>
         )}
 
         {!isLoading && status !== 200 && (
-          <div className="h-[15rem] w-full flex justify-center items-center">
-            <p className="text-center text-xl p-20">No hay eventos cercanos</p>
+          <div className="h-[10rem] w-full flex justify-center items-center">
+            <p className="text-center text-xl p-20">No hay avisos</p>
           </div>
         )}
 
