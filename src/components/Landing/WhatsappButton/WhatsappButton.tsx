@@ -20,7 +20,7 @@ export default function WhatsappButton({ isMinimal }: WhatsappButtonProps) {
 
   return (
     <div
-      className="transition-all px-4 py-4 md:py-2 bg-green-700 text-white rounded-full fixed bottom-5 left-5 cursor-pointer"
+      className="transition-all px-4 py-4 md:py-2 bg-green-700 text-white rounded-full fixed bottom-5 left-5 z-10 cursor-pointer"
       onClick={onClick}
     >
       <div className="text-3xl md:flex md:gap-4 md:items-center md:text-xl">

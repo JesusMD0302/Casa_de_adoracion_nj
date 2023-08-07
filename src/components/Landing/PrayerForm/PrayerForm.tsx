@@ -26,7 +26,7 @@ function PrayerForm() {
       subject: "Solicitud de oración",
     };
 
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/contact`, {
+    const res = await fetch(`${process.env.URL}/api/contact`, {
       method: "POST",
       body: JSON.stringify(data),
     });
