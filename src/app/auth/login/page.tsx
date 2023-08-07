@@ -41,7 +41,7 @@ export default function LoginPage() {
       setError("");
       return router.push("/panel-admin");
     }
-  });
+  }); 
 
   return (
     <main>

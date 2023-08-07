@@ -11,6 +11,7 @@ const nextConfig = {
   },
   env: {
     URL: process.env.NEXTAUTH_URL,
+    NUMBER: process.env.NUMBER,
   },
   async headers() {
     return [

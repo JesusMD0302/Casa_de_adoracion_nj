@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { BsList, BsThreeDotsVertical, BsWhatsapp } from "react-icons/bs";
+import { BsList, BsWhatsapp } from "react-icons/bs";
 import ContactCard from "../ContactCard/ContactCard";
-import Button from "../Button/Button";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import useActive from "@/hooks/useActive";
+import WhatsappButton from "../WhatsappButton/WhatsappButton";
 
 function Navbar() {
   const logoWidth: number = 70;
@@ -92,8 +92,8 @@ function Navbar() {
                         sm:group-[.isOneLine]:invisible sm:group-[.isOneLine]:-mt-24
                         md:text-lg"
           >
-            <ContactCard icon={<BsWhatsapp />} contactInfo={"9999999999"} />
-            {/* <Button text={"Contactar"} /> */}
+            <ContactCard icon={<BsWhatsapp />} contactInfo={process.env.NUMBER ?? "9999999999"} />
+            <WhatsappButton isMinimal />
           </div>
           <ul
             className={`
