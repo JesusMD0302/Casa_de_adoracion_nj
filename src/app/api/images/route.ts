@@ -8,9 +8,6 @@ import {
 } from "@/utils/errors";
 import { ValidateFormData } from "@/lib/validator";
 import { ValidateAuthorization } from "@/utils/validateAuthorization";
-import { cloudinary } from "@/lib/cloudinary";
-
-const upload = multer({ dest: "temp/" });
 
 export async function GET(req: NextRequest) {
   try {
@@ -47,31 +44,51 @@ export async function POST(req: NextRequest) {
     await ValidateAuthorization(req);
 
     const data = await req.formData();
+    const newForm = new FormData();
+    let images: any[] = [];
 
     const { files, galleryId } = ValidateFormData(data);
 
-    upload.array("images")(
-      req as any,
-      NextResponse as any,
-      async function (err) {
-        if (err) {
-          return NextResponse.json(
-            { error: "Error al subir los archivos" },
-            { status: 500 }
-          );
-        }
+    for (const file in files) {
+      newForm.append("file", file);
+    }
 
-        const files = (req as any).images;
-        const urls = [];
-
-        for (const file of files) {
-          const result = await cloudinary.uploader.upload(file.path);
-          urls.push(result.secure_url);
-        }
-
-        return NextResponse.json({ urls }, { status: 200 });
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dadsaghlt/upload",
+      {
+        body: newForm,
       }
     );
+
+    if (response.ok) {
+      const data = await response.json();
+      const urls = (data.resources as []).map(
+        (resource: any) => resource.secure_url
+      );
+
+      for await (const url of urls) {
+        try {
+          const res = await prisma.image.create({
+            data: {
+              galery: {
+                connect: {
+                  galleryID: galleryId,
+                },
+              },
+              imageURL: url,
+            },
+          });
+          images = [...images, res];
+        } catch (error) {}
+      }
+    } else {
+      return NextResponse.json(
+        { error: "Error al subir las imágenes a Cloudinary" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ data: { images } });
   } catch (error: any) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json(
