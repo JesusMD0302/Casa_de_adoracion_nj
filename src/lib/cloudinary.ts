@@ -1,6 +1,11 @@
 import { v2 } from "cloudinary";
 
-export const cloudinary = v2.config({
+const cloudinary = v2;
+
+cloudinary.config({
   cloud_name: "dadsaghlt",
-  account_id: "6965efa5e0db5913e14425ab0ee359"
+  api_key: "683639546171993",
+  api_secret: "f6UwUWBaTBp-HZJXJ7K15yS-x0A",
 });
+
+export { cloudinary };

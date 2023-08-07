@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
       // });
 
       const result = await new Promise((resolve, reject) => {
+        // const stream = cloudinary.uploader.upload_stream(resolve);
         const stream = cloudinary.uploader.upload_stream(resolve);
         stream.end(file);
       });
