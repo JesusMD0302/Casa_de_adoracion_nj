@@ -21,7 +21,7 @@ export default function AnnouncementSection() {
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, status } = await getData({
-        url: `${process.env.NEXTAUTH_URL}/api/announcements`,
+        url: `${process.env.URL}/api/announcements`,
       });
 
       setStatus(status);

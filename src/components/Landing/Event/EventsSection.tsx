@@ -41,7 +41,7 @@ function EventsSection() {
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, status } = await getData({
-        url: `${process.env.NEXTAUTH_URL}/api/events`,
+        url: `${process.env.URL}/api/events`,
       });
 
       setStatus(status);
