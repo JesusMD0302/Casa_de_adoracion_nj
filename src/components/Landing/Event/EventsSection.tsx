@@ -61,6 +61,7 @@ function EventsSection() {
     <>
       <Section
         id="events"
+        className="h-80"
         containerClassName="h-full py-10 flex flex-col justify-between"
         imgBackground
         imgBgURL="/eventos-banner.jpg"
