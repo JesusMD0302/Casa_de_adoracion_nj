@@ -8,7 +8,7 @@ export async function PUT(
   { params }: { params: { psalmID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestPsalmID = params.psalmID;
 

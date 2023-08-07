@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const data = await req.formData();
 

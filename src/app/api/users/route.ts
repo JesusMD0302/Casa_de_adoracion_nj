@@ -8,7 +8,7 @@ import { encryptPassword } from "@/utils/bcrypt";
 
 export async function GET(req: NextRequest) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const users = await prisma.user.findMany({
       select: {
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const body: { userName: string; email: string; password: string } =
       await req.json();

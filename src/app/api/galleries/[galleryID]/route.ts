@@ -63,7 +63,7 @@ export async function PUT(
   { params }: { params: { galleryID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestGalleryID = params.galleryID;
 
@@ -119,7 +119,7 @@ export async function DELETE(
   { params }: { params: { galleryID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestGalleryID = params.galleryID;
 

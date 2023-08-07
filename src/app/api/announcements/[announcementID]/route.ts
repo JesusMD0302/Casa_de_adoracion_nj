@@ -10,7 +10,7 @@ export async function GET(
   { params }: { params: { announcementID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestAnnouncementID = params.announcementID;
     const announcementID = Number(requestAnnouncementID);
@@ -64,7 +64,7 @@ export async function PUT(
   { params }: { params: { announcementID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestAnnouncementID = params.announcementID;
 
@@ -128,7 +128,7 @@ export async function DELETE(
   { params }: { params: { announcementID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestAnnouncementID = params.announcementID;
 

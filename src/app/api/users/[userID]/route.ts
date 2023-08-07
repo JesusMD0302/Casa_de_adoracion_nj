@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: { userID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestUserID = params.userID;
     const userID = Number(requestUserID);
@@ -64,7 +64,7 @@ export async function PUT(
   { params }: { params: { userID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestUserID = params.userID;
 
@@ -161,7 +161,7 @@ export async function DELETE(
   { params }: { params: { userID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestUserID = params.userID;
 
@@ -219,7 +219,7 @@ export async function PATCH(
   { params }: { params: { userID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestUserID = params.userID;
 

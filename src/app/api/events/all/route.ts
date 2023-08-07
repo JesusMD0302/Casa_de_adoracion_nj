@@ -5,14 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const events = await prisma.event.findMany({
       orderBy: {
         createdAt: "asc",
       },
     });
-    
+
     if (events.length === 0) {
       throw new NoDataError("No hay eventos cercanos");
     }
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         { status: 401 }
       );
     }
-    
+
     if (error instanceof NoDataError) {
       return NextResponse.json(
         {

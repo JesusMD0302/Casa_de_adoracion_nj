@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: { eventID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestEventID = params.eventID;
 
@@ -65,7 +65,7 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { eventID: string } }
 ) {
-  ValidateAuthorization(req);
+  await ValidateAuthorization(req);
 
   const requestEventID = params.eventID;
 
@@ -140,7 +140,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { eventID: string } }
 ) {
-  ValidateAuthorization(req);
+  await ValidateAuthorization(req);
 
   const requestEventID = params.eventID;
 

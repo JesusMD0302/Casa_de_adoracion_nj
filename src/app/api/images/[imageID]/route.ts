@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { imageID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestImageID = params.imageID;
     const galleryID = Number(requestImageID);
@@ -62,7 +62,7 @@ export async function DELETE(
   { params }: { params: { imageID: string } }
 ) {
   try {
-    ValidateAuthorization(req);
+    await ValidateAuthorization(req);
 
     const requestImageID = params.imageID;
 
