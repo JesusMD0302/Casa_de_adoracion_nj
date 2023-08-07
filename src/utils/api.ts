@@ -52,7 +52,7 @@ export const deleteImage = async (imageID: number) => {
 
 // Week Psalm requests
 export const getWeekPsalm = async () => {
-  const { data } = await axios.get("/week-psalms");
+  const { data } = await axios.get("/week-psalms/1");
   return data.data.weekPsalm;
 };
 
