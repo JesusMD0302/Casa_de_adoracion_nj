@@ -8,11 +8,12 @@ const nextConfig = {
         port: "",
       },
     ],
-    domains: ['res.cloudinary.com']
+    domains: ["res.cloudinary.com"],
   },
   env: {
     URL: process.env.NEXTAUTH_URL,
     NUMBER: process.env.NUMBER,
+    TINYMCE_API_KEY: process.env.TINYMCE_API_KEY,
   },
   async headers() {
     return [

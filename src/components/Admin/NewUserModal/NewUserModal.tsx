@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../Input/Input";
 import AdminModal from "../AdminModal/AdminModal";
 import useActive from "@/hooks/useActive";
@@ -22,7 +22,7 @@ export function NewUserModal({ modalId, formRecord }: AdminModalCreateProps) {
     reset,
     formState: { errors, isSubmitted },
   } = useForm({
-    resolver: zodResolver(userSchema)
+    resolver: zodResolver(userSchema),
   });
 
   const queryClient = useQueryClient();
@@ -113,8 +113,12 @@ export function NewUserModal({ modalId, formRecord }: AdminModalCreateProps) {
           />
 
           {isSubmitted && showMessage && (
-            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
-              {formRecord ? "Datos actualizados" : "Usuario creado"}
+            <p
+              className={`w-fulll px-3 py-2 rounded-md ${
+                mutation.isError ? "bg-red-500" : "bg-green-600"
+              } text-white font-bold`}
+            >
+              {mutation.isError ? "Hubo un problema" : "Usuario creado"}
             </p>
           )}
 

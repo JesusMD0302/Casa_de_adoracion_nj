@@ -13,7 +13,7 @@ export default function TinyEditor({ height = 30, ...props }: TinyEditorProps) {
     <>
       <Editor
         {...props}
-        apiKey="mket0gz2vleyx9rgc1te5l8lxyprcg60wv23tlog9sbef5r7"
+        apiKey={process.env.TINYMCE_API_KEY}
         onInit={(evt, editor) => (editorRef.current = editor)}
         plugins="lists advlist autolink link insertdatetime wordcount help"
         init={{
@@ -28,7 +28,7 @@ export default function TinyEditor({ height = 30, ...props }: TinyEditorProps) {
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
           resize: false,
-          language: "es"
+          language: "es",
         }}
       />
     </>

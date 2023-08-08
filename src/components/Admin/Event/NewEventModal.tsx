@@ -57,7 +57,6 @@ export function NewEventModal({ modalId, formRecord }: AdminModalCreateProps) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-
     if (formRecord) {
       mutationForUpdate.mutate({
         eventID: (formRecord as any).eventID,
@@ -200,8 +199,20 @@ export function NewEventModal({ modalId, formRecord }: AdminModalCreateProps) {
           />
 
           {isSubmitted && showMessage && (
-            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
-              {formRecord ? "Datos actualizado" : "Evento creado"}
+            <p
+              className={`w-fulll px-3 py-2 rounded-md ${
+                mutationForCreate.isError ||
+                (formRecord && mutationForUpdate.isError)
+                  ? "bg-red-500"
+                  : "bg-green-600"
+              } text-white font-bold`}
+            >
+              {formRecord
+                ? "Datos actualizado"
+                : mutationForCreate.isError ||
+                  (formRecord && mutationForUpdate.isError)
+                ? "Hubo un problema"
+                : "Evento creado"}
             </p>
           )}
 

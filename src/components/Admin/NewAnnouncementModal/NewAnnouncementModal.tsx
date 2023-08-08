@@ -180,8 +180,20 @@ export function NewAnnouncementModal({
           </div>
 
           {isSubmitted && showMessage && (
-            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
-              {formRecord ? "Datos actualizados" : "Aviso creado"}
+            <p
+              className={`w-fulll px-3 py-2 rounded-md ${
+                mutationForCreate.isError ||
+                (formRecord && mutationForUpdate.isError)
+                  ? "bg-red-500"
+                  : "bg-green-600"
+              } text-white font-bold`}
+            >
+              {formRecord
+                ? "Datos actualizados"
+                : mutationForCreate.isError ||
+                  (formRecord && mutationForUpdate.isError)
+                ? "Hubo un problema"
+                : "Aviso creado"}
             </p>
           )}
 

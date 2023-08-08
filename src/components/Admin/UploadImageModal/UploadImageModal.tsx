@@ -61,43 +61,6 @@ export function UploadImageModal({
     });
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
-      let formData = new FormData(e.currentTarget as HTMLFormElement);
-
-      if (!formData.get("gallery_id")) {
-        alert("No se selecciono una opción");
-        return;
-      }
-
-      if (
-        formData.getAll("images").length < 0 ||
-        (formData.getAll("images")[0] as File).name === ""
-      ) {
-        alert("No se selecciono ninguna imagen");
-        return;
-      }
-
-      fetch("http://localhost:3000/api/images", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => {
-          if (res.ok) {
-            location.reload();
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
-  };
-
   return (
     <>
       {/* New Image Modal */}
@@ -195,8 +158,8 @@ export function UploadImageModal({
           )}
 
           {isSubmitted && showMessage && (
-            <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
-              {formRecord ? "Datos actualizado" : "Evento creado"}
+            <p className={`w-fulll px-3 py-2 rounded-md ${mutation.isError ? "bg-red-600" : "bg-green-600"} text-white font-bold`}>
+              {formRecord ? "Datos actualizado" : mutation.isError ? "Hubo un problema" : "Imagen(es) subidas"}
             </p>
           )}
 

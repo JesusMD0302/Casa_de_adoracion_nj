@@ -48,25 +48,23 @@ export async function POST(req: NextRequest) {
 
     const { files, galleryId } = ValidateFormData(data);
 
-    for (const file in files) {
+    for (const file of files) {
       newForm.append("file", file);
-    }
+      newForm.append("upload_preset", process.env.UPLOAD_PRESET ?? "");
+      newForm.append("api_key", process.env.CLOUDINARY_API_KEY ?? "");
 
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dadsaghlt/upload",
-      {
-        method: "POST",
-        body: newForm,
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      const urls = (data.resources as []).map(
-        (resource: any) => resource.secure_url
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: newForm,
+        }
       );
 
-      for await (const url of urls) {
+      if (response.ok) {
+        const data = await response.json();
+        const url = data.secure_url;
+
         try {
           const res = await prisma.image.create({
             data: {
@@ -80,12 +78,12 @@ export async function POST(req: NextRequest) {
           });
           images = [...images, res];
         } catch (error) {}
+      } else {
+        return NextResponse.json(
+          { error: "Error al subir las imágenes a Cloudinary" },
+          { status: 500 }
+        );
       }
-    } else {
-      return NextResponse.json(
-        { error: "Error al subir las imágenes a Cloudinary" },
-        { status: 500 }
-      );
     }
 
     return NextResponse.json({ data: { images } });

@@ -14,19 +14,6 @@ interface ImageUploadFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 function ImageUploadField({ setValue, name, value }: ImageUploadFieldProps) {
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
-      acceptedFiles.forEach((file) => {
-        const reader = new FileReader();
-
-        reader.onabort = () => console.log("file reading was aborted");
-        reader.onerror = () => console.log("file reading has failed");
-        reader.onload = () => {
-          // Do whatever you want with the file contents
-          const binaryStr = reader.result;
-          console.log(binaryStr);
-        };
-        reader.readAsArrayBuffer(file);
-      });
-
       setValue(name, acceptedFiles);
     },
     [setValue, name]
@@ -60,7 +47,7 @@ function ImageUploadField({ setValue, name, value }: ImageUploadFieldProps) {
                   alt={value.name}
                   width={300}
                   height={200}
-                  className="object-cover"
+                  className="object-cover -translate-y-1/2"
                 />
               </div>
             ))}

@@ -98,8 +98,12 @@ export default function ChangePasswordModal({
         />
 
         {isSubmitted && showMessage && (
-          <p className="w-fulll px-3 py-2 rounded-md bg-green-600 text-white font-bold">
-            Datos actualizados
+          <p
+            className={`w-fulll px-3 py-2 rounded-md ${
+              mutation.isError ? "bg-red-600" : "bg-green-600"
+            } text-white font-bold`}
+          >
+            {mutation.isError ? "Hubo un problema" : "Datos actualizados"}
           </p>
         )}
 

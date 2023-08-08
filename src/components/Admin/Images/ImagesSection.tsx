@@ -78,7 +78,7 @@ export default function ImagesSection({
                   <ImageCard className="image-card" handleDelete={handleDelete} elementID={image.imageID} key={image.imageID}>
                     <Image
                       alt={`imagen ${category}`}
-                      src={`/galleries/${image.imageURL}`}
+                      src={`${image.imageURL}`}
                       fill
                       className="object-cover"
                     />

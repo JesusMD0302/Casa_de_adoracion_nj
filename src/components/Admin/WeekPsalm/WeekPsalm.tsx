@@ -81,8 +81,12 @@ export default function WeekPsalm() {
 
       {isSubmitted && showMessage && (
         <div className="px-8 mb-2">
-          <p className="w-fulll px-3 py-2 rounded-md bg-blue-800 text-white font-bold">
-            Salmo actualizado
+          <p
+            className={`w-fulll px-3 py-2 rounded-md ${
+              mutation.isError ? "bg-red-500" : "bg-blue-800"
+            } text-white font-bold`}
+          >
+            {mutation.isError ? "Hubo un problema" : "Salmo actualizado"}
           </p>
         </div>
       )}

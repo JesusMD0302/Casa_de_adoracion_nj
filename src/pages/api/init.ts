@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default async function handler(req: NextRequest) {
   try {
-    const encryptedPassword = await encryptPassword("adminPassword123");
+    const encryptedPassword = await encryptPassword( process.env.ADMIN_USER_PASSWORD ?? "adminPassword123");
 
     const defaultAdmin = await prisma.user.upsert({
       where: {
@@ -14,7 +14,7 @@ export default async function handler(req: NextRequest) {
         password: encryptedPassword,
       },
       create: {
-        email: "defaultadmin@casanj.com",
+        email:  process.env.ADMIN_USER_EMAIL ?? "defaultadmin@casanj.com",
         password: encryptedPassword,
         userName: "DefaultAdmin",
       },

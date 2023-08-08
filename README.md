@@ -27,6 +27,12 @@ La carpeta `public/galleries` contiene las imagenes guardadas por la aplicación
 El proyecto necesita un archivo `.env` con las siguientes variables de entorno:
 
 ```json
+// Primer admin user email
+ADMIN_USER_EMAIL
+
+// Primer admin user password
+ADMIN_USER_PASSWORD
+
 // Secret Key para la creación de JWT
 SECRET_KEY
 
