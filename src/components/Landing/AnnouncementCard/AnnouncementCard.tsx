@@ -18,7 +18,7 @@ export default function AnnouncementCard({
   announcementDescription,
   isImportant,
 }: AnnouncementProps) {
-  const date = moment.utc(announcementDate);
+  const date = moment(announcementDate);
   const formatedDate = date
     .add({ days: 1 })
     .format("DD MMMM, YYYY")

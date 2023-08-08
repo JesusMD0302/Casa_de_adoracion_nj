@@ -83,7 +83,7 @@ function EventsSection() {
                 ubication={nextEvent!.ubication}
               />
               <Countdown
-                date={moment.utc(nextEvent?.startDate ?? "").toDate()}
+                date={moment(nextEvent?.startDate ?? "").toDate()}
                 renderer={CountdownTimer}
               />
             </>
