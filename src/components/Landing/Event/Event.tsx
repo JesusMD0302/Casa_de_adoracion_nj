@@ -23,7 +23,7 @@ function Event({
   description?: string;
   ubication?: string;
 }) {
-  const today = startDate == null ? moment() : moment(startDate);
+  const today = startDate == null ? moment() : moment.utc(startDate);
 
   const { active: showAllInfo, handleToggle: handleToggleInfo } = useActive();
 

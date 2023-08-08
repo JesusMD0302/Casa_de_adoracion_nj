@@ -117,13 +117,13 @@ export function NewAnnouncementModal({
           <Controller
             name="announcementDate"
             control={control}
-            rules={{ required: true, min: moment().format("YYYY-MM-DD") }}
+            rules={{ required: true, min: moment.utc().format("YYYY-MM-DD") }}
             render={({ field }) => (
               <Input
                 label="Fecha"
                 alterLabel="Fecha actual o posteriores"
                 type="date"
-                min={moment().format("YYYY-MM-DD")}
+                min={moment.utc().format("YYYY-MM-DD")}
                 {...field}
                 errors={errors.announcementDate}
                 errorMessage={errors.announcementDate?.message as string}

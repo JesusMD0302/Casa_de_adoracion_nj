@@ -132,14 +132,14 @@ export function NewEventModal({ modalId, formRecord }: AdminModalCreateProps) {
           <Controller
             name="startDate"
             control={control}
-            rules={{ required: true, min: moment().format("YYYY-MM-DDTHH:mm") }}
+            rules={{ required: true, min: moment.utc().format("YYYY-MM-DDTHH:mm") }}
             render={({ field }) => (
               <Input
                 label="Fecha del evento"
                 alterLabel="Fecha actual o posteriores"
                 type="datetime-local"
                 placeholder="Fecha"
-                min={moment().format("YYYY-MM-DDTHH:mm")}
+                min={moment.utc().format("YYYY-MM-DDTHH:mm")}
                 errors={errors.startDate}
                 {...field}
               />
@@ -165,14 +165,14 @@ export function NewEventModal({ modalId, formRecord }: AdminModalCreateProps) {
               <Controller
                 name="endDate"
                 control={control}
-                rules={{ min: moment().format("YYYY-MM-DDTHH:mm") }}
+                rules={{ min: moment.utc().format("YYYY-MM-DDTHH:mm") }}
                 render={({ field }) => (
                   <Input
                     label="Fecha de finalización del evento"
                     alterLabel="Fecha actual o posteriores"
                     type="datetime-local"
                     placeholder="Fecha"
-                    min={moment().format("YYYY-MM-DDTHH:mm")}
+                    min={moment.utc().format("YYYY-MM-DDTHH:mm")}
                     errors={errors.endDate}
                     {...field}
                   />

@@ -42,9 +42,8 @@ NEXTAUTH_URL
 // Variable Secret para uso de la libreria NextAuth
 NEXTAUTH_SECRET
 
-// Email del gmail, que recibira los correos de la organización
+// Variables de cuenta gmail
 EMAIL
-
 // Contraseña de la cuenta, es necesario que sea una contraseña de aplicación (vea el siguient link)
 // https://support.google.com/accounts/answer/185833?hl=es
 PASSWORD
@@ -64,6 +63,13 @@ POSTGRES_DATABASE
 // Variable API KEY de la libreria TinyMCE (Configurar los dominios permitidos)
 // https://www.tiny.cloud/
 TINYMCE_API_KEY
+
+// Variables de cuenta cloudinary, una cuenta gratis debe ser suficiente
+// https://cloudinary.com/
+CLOUDINARY_NAME // Cloudinary cloud name
+UPLOAD_PRESET // Preset de cloudinary, se encuentra en la configuración (https://support.cloudinary.com/hc/en-us/articles/360016481620-What-are-Upload-presets-and-how-to-use-them#:~:text=Upload%20presets%20allow%20defining%20a%20set%20of%20actions,applying%20an%20add-on%20capability%2C%20and%20many%20other%20options.)
+CLOUDINARY_API_KEY // API KEY de la cuenta de cloudinary
+
 ```
 
 Para ejecutar el proyecto en un entorno de desarrollo, ejecute el comando:

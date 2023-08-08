@@ -24,12 +24,12 @@ export default function AnnouncementCard({
   isImportant,
   updatedAt,
 }: AnnouncementProps) {
-  const date = announcementDate === null ? moment() : moment(announcementDate);
+  const date = announcementDate === null ? moment() : moment.utc(announcementDate);
   const formatedDate = date
     .add({ days: 1 })
     .format("DD/MMMM/YYYY")
     .toUpperCase();
-  const updatedTime = moment(updatedAt).fromNow(true);
+  const updatedTime = moment.utc(updatedAt).fromNow(true);
 
   const [formToUpdate, setFormToUpdate] = useState({
     announcementID,

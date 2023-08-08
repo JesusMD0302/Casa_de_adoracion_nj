@@ -4,7 +4,6 @@ import AdminCard from "../AdminCard/AdminCard";
 import { NewEventModal } from "./NewEventModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEvent } from "@/utils/api";
-import { useEffect, useState } from "react";
 moment.locale("es");
 
 export function AdminEventCard({
@@ -25,13 +24,13 @@ export function AdminEventCard({
   description?: string;
   updatedAt?: string | null;
 }) {
-  const date = startDateEvent == null ? moment() : moment(startDateEvent);
-  const endDateMoment = endDateEvent === null ? moment() : moment(endDateEvent);
+  const date = startDateEvent == null ? moment() : moment.utc(startDateEvent);
+  const endDateMoment = endDateEvent === null ? moment() : moment.utc(endDateEvent);
   const formatedDate = date.format("DD/MMMM/YYYY - h:mm a").toUpperCase();
   const formatedEndDate = endDateMoment
     .format("DD/MMMM/YYYY - h:mm a")
     .toUpperCase();
-  const updatedTime = moment(updatedAt).fromNow(true);
+  const updatedTime = moment.utc(updatedAt).fromNow(true);
 
   let formToUpdate = {
     eventID,
