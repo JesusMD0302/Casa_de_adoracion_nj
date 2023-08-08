@@ -56,7 +56,7 @@ function GaleryContainer({
             <ImageCard className="image-card max-h-56" key={image.imageID}>
               <Image
                 alt={`imagen ${category}`}
-                src={`/galleries/${image.imageURL}`}
+                src={`${image.imageURL}`}
                 fill
                 className="object-cover"
               />
