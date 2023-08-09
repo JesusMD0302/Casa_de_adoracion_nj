@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "Data is already" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: "Internal server error", error },
       { status: 500 }
     );
   }
