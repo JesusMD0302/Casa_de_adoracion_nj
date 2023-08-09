@@ -14,10 +14,7 @@ La carpeta `lib` contien los ficheros de configuración de las librerias utiliza
   - La carpeta `auth` contiene la ruta de login del panel administrador
   - La carpeta `panel-admin` contiene las rutas del panel administrador
   - La carpeta `api` contiene las rutas de la API
-
-### Pages router
-* La carpeta `pages` contiene las rutas de configuración
-  - El fichero `api/init.ts` contiene la ruta de incialización de los datos (usuario administrado, galerías, salmo semanal)
+  - El fichero `api/init` contiene la ruta de incialización de los datos (usuario administrado, galerías, salmo semanal)
 
 ### Carpeta de imagenes
 La carpeta `public/galleries` contiene las imagenes guardadas por la aplicación
