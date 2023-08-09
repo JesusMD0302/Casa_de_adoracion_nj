@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { encryptPassword } from "@/utils/bcrypt";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function initialize() {
+export async function POST(req: NextRequest) {
   try {
     const encryptedPassword = await encryptPassword( process.env.ADMIN_USER_PASSWORD ?? "adminPassword123");
 
