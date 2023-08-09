@@ -5,7 +5,9 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-const prisma = globalForPrisma.prisma;
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 async function createData() {
   try {
@@ -121,5 +123,3 @@ const checPsalm = async () => {
 };
 
 createData().then((res) => console.log(res));
-
-export { prisma };
