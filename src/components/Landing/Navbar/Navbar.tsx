@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import useActive from "@/hooks/useActive";
 import WhatsappButton from "../WhatsappButton/WhatsappButton";
+import Button from "../Button/Button";
 
 function Navbar() {
   const logoWidth: number = 70;
@@ -94,12 +95,17 @@ function Navbar() {
           >
             <ContactCard icon={<BsWhatsapp />} contactInfo={process.env.NUMBER ?? "9999999999"} />
             <WhatsappButton isMinimal />
+            <Button className="font-normal" underline>
+              <Link href={"/auth/login"}>
+              Ingresar
+              </Link>
+            </Button>
           </div>
           <ul
             className={`
           transition-all duration-200 ease-out 
           w-full bg-gray-200 text-center md:text-lg
-          absolute -z-40 left-0 ${showMenu ? "top-full" : "-top-[110%]"} 
+          absolute -z-40 left-0 ${showMenu ? "top-full" : "-top-[180%]"} 
           flex flex-col
           sm:relative sm:bg-transparent sm:flex-row sm:gap-3 sm:z-0
           sm:pt-1 sm:group-[.isOneLine]:pt-10`}
@@ -137,6 +143,14 @@ function Navbar() {
                 onClick={handleScroll}
               >
                 Contacto
+              </Link>
+            </li>
+            <li className="w-full h-full py-3 transition-all hover:bg-slate-300 sm:hidden sm:py-0 sm:w-auto sm:hover:bg-transparent sm:hover:text-red-500">
+              <Link
+                className="block w-full h-full"
+                href={"/auth/login"}
+              >
+                Ingresar
               </Link>
             </li>
           </ul>
