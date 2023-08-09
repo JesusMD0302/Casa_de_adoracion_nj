@@ -9,7 +9,7 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-async function createData() {
+export async function createData() {
   try {
     const user = await checUser();
     const childrenGallery = await checFirstGallery();
@@ -121,5 +121,3 @@ const checPsalm = async () => {
     },
   });
 };
-
-createData().then((res) => console.log(res));
