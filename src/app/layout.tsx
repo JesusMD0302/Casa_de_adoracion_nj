@@ -1,3 +1,4 @@
+import { initialize } from "@/utils/init";
 import "./globals.css";
 
 export const metadata = {
@@ -5,6 +6,8 @@ export const metadata = {
   description:
     "Armonia Unidad Restauraccion que las familias sean felices y disfruten de las promesas del señor",
 };
+
+initialize();
 
 export default function RootLayout({
   children,
