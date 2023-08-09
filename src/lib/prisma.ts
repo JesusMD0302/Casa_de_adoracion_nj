@@ -33,13 +33,24 @@ const prisma =
 
 async function createData() {
   try {
-    await checUser();
-    await checFirstGallery();
-    await checSecondGallery();
-    await checThirdGallery();
-    await checFourtGallery();
-    await checPsalm();
-  } catch (error) {}
+    const user = await checUser();
+    const childrenGallery = await checFirstGallery();
+    const menGallery = await checSecondGallery();
+    const womenGallery = await checThirdGallery();
+    const specialGallery = await checFourtGallery();
+    const psalm = await checPsalm();
+
+    return {
+      user,
+      childrenGallery,
+      menGallery,
+      womenGallery,
+      specialGallery,
+      psalm,
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const checUser = async () => {
@@ -133,6 +144,6 @@ const checPsalm = async () => {
   });
 };
 
-createData();
+createData().then((res) => console.log(res));
 
 export { prisma };
