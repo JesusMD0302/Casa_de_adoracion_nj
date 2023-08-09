@@ -35,89 +35,54 @@ const checUser = async () => {
   const encryptedPassword = await encryptPassword(
     process.env.ADMIN_USER_PASSWORD ?? "adminPassword123"
   );
-
-  const user = await prisma.user.findUnique({
+  const defaultAdmin = await prisma.user.upsert({
     where: {
       userID: 1,
     },
-  });
-
-  if (user) {
-    throw new Error("Ya existe el usuario");
-  }
-
-  const defaultAdmin = await prisma.user.create({
-    data: {
+    create: {
       email: process.env.ADMIN_USER_EMAIL ?? "defaultadmin@casanj.com",
       password: encryptedPassword,
       userName: "DefaultAdmin",
     },
+    update: {},
   });
 };
 const checFirstGallery = async () => {
-  const gallery = await prisma.gallery.findUnique({
+  const childrenGallery = await prisma.gallery.upsert({
     where: { galleryID: 1 },
-  });
-
-  if (gallery) {
-    throw new Error("Ya existe la galería");
-  }
-
-  const childrenGallery = await prisma.gallery.create({
-    data: { name: "Niños" },
+    create: { name: "Niños" },
+    update: {},
   });
 };
 const checSecondGallery = async () => {
-  const gallery = await prisma.gallery.findUnique({
+  const menGallery = await prisma.gallery.upsert({
     where: { galleryID: 2 },
-  });
-
-  if (gallery) {
-    throw new Error("Ya existe la galería");
-  }
-
-  const menGallery = await prisma.gallery.create({
-    data: { name: "Hombres" },
+    create: { name: "Hombres" },
+    update: {},
   });
 };
 const checThirdGallery = async () => {
-  const gallery = await prisma.gallery.findUnique({
+  const womenGallery = await prisma.gallery.upsert({
     where: { galleryID: 3 },
-  });
-
-  if (gallery) {
-    throw new Error("Ya existe la galería");
-  }
-
-  const womenGallery = await prisma.gallery.create({
-    data: { name: "Mujeres" },
+    create: { name: "Mujeres" },
+    update: {},
   });
 };
 const checFourtGallery = async () => {
-  const gallery = await prisma.gallery.findUnique({
+  const specialGallery = await prisma.gallery.upsert({
     where: { galleryID: 4 },
-  });
-
-  if (gallery) {
-    throw new Error("Ya existe la galería");
-  }
-
-  const specialGallery = await prisma.gallery.create({
-    data: { name: "Especiales" },
+    create: { name: "Especiales" },
+    update: {},
   });
 };
 const checPsalm = async () => {
-  const psalm = await prisma.weekPsalm.findUnique({
+  const defaultPsalm = await prisma.weekPsalm.upsert({
     where: { PsalmID: 1 },
-  });
-
-  if (psalm) {
-    throw new Error("Ya existe el salmo");
-  }
-
-  const defaultPsalm = await prisma.weekPsalm.create({
-    data: {
+    create: {
       content: "<p>Salmo semanal</p>",
     },
+    update: {},
   });
 };
+
+createData();
