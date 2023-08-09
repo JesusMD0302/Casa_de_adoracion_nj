@@ -16,8 +16,13 @@ La carpeta `lib` contien los ficheros de configuración de las librerias utiliza
   - La carpeta `api` contiene las rutas de la API
   - El fichero `api/init/` contiene la ruta de incialización de los datos (usuario administrado, galerías, salmo semanal)
 
-### Carpeta de imagenes
-La carpeta `public/galleries` contiene las imagenes guardadas por la aplicación
+### Inicializar la base de datos
+Ejecutar el comando 
+```bash
+npx prisma db push
+```
+
+Hacer una peticion POST a la ruta `/api/init`
 
 ### Variables de entorno
 
